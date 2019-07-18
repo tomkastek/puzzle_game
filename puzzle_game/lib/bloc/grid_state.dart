@@ -1,15 +1,17 @@
 import 'package:equatable/equatable.dart';
 
 class GridState extends Equatable {
-  final List<List<String>> gridState = [
-    ['R', 'B', 'G', 'Y', 'D', 'R'],
-    ['R', 'Y', 'D', 'D', 'R', 'G'],
-    ['B', 'G', 'B', 'Y', 'Y', 'B'],
-    ['R', 'G', 'G', 'B', 'D', 'R'],
-    ['D', 'B', 'R', 'D', 'R', 'G'],
-  ];
+  List<List<String>> gridState;
 
-  GridState([List props = const []]) : super(props);
+  GridState([List props = const []]) : super(props) {
+    gridState = [
+      ['R', 'B', 'G', 'Y', 'D', 'R'],
+      ['R', 'Y', 'D', 'D', 'R', 'G'],
+      ['B', 'G', 'B', 'Y', 'Y', 'B'],
+      ['R', 'G', 'G', 'B', 'D', 'R'],
+      ['D', 'B', 'R', 'D', 'R', 'G'],
+    ];
+  }
 
   int numberOfRows() {
     return gridState.length;
