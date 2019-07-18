@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 class BoardItem extends StatelessWidget {
   BoardItem({Key key, @required this.itemIdentifier}) : super(key: key);
 
-  String itemIdentifier;
+  final String itemIdentifier;
 
   @override
   Widget build(BuildContext context) {
