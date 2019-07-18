@@ -16,56 +16,41 @@ class BoardItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     switch (itemIdentifier) {
-      case '':
-        return Text('');
-        break;
       case 'R':
-        return LayoutBuilder(builder: (context, constraint) {
-          return Icon(
-            Icons.blur_circular,
-            size: constraint.biggest.height,
-            color: Colors.red,
-          );
-        });
+        return CircleItem(color: Colors.red,);
         break;
       case 'B':
-        return LayoutBuilder(builder: (context, constraint) {
-          return Icon(
-            Icons.blur_circular,
-            size: constraint.biggest.height,
-            color: Colors.blue,
-          );
-        });
+        return CircleItem(color: Colors.blue);
         break;
       case 'G':
-        return LayoutBuilder(builder: (context, constraint) {
-          return Icon(
-            Icons.blur_circular,
-            size: constraint.biggest.height,
-            color: Colors.green[700],
-          );
-        });
+        return CircleItem(color: Colors.green[700]);
         break;
       case 'Y':
-        return LayoutBuilder(builder: (context, constraint) {
-          return Icon(
-            Icons.blur_circular,
-            size: constraint.biggest.height,
-            color: Colors.yellow[600],
-          );
-        });
+        return CircleItem(color: Colors.yellow[600]);
         break;
       case 'D':
-        return LayoutBuilder(builder: (context, constraint) {
-          return Icon(
-            Icons.blur_circular,
-            size: constraint.biggest.height,
-            color: Colors.deepPurple,
-          );
-        });
+        return CircleItem(color: Colors.deepPurple);
         break;
       default:
         return Text(itemIdentifier.toString());
     }
   }
 }
+
+class CircleItem extends StatelessWidget {
+  const CircleItem({Key key, @required this.color}) : super(key: key);
+
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, constraint) {
+      return Icon(
+        Icons.blur_circular,
+        size: constraint.biggest.height,
+        color: color,
+      );
+    });
+  }
+}
+

@@ -8,8 +8,8 @@ import 'package:puzzle_game/battle/board_item.dart';
 class BoardField extends StatelessWidget {
   BoardField({Key key, @required this.gridState, this.index}) : super(key: key);
 
-  List<List<String>> gridState;
-  int index;
+  final List<List<String>> gridState;
+  final int index;
 
   @override
   Widget build(BuildContext context) {

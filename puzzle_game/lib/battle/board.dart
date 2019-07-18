@@ -16,13 +16,14 @@ class Board extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var gridStateLength = gridState.length * gridState.first.length;
+    var boardWidth = MediaQuery.of(context).size.width;
     return Column(children: <Widget>[
       Container(
-        height: 5 / 6 * MediaQuery.of(context).size.width,
-        width: MediaQuery.of(context).size.width,
+        height: gridState.length / gridState.first.length * boardWidth,
+        width: boardWidth,
         child: GridView.count(
           physics: NeverScrollableScrollPhysics(), // disable scrolling
-          crossAxisCount: 6,
+          crossAxisCount: gridState.first.length,
           childAspectRatio: 1,
           children: List.generate(gridStateLength, (index) {
             return BoardField(
