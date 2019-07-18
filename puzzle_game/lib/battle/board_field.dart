@@ -27,7 +27,7 @@ class BoardField extends StatelessWidget {
             color: dark ? Colors.brown[500] : Colors.brown[700]),
         child: Center(
           child: BoardItem(
-            itemIdentifier: state.gridState[x][y],
+            itemIdentifier: state.grid[x][y],
           ),
         ),
       );

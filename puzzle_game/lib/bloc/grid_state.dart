@@ -1,24 +1,21 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 class GridState extends Equatable {
-  List<List<String>> gridState;
+  final List<List<String>> grid;
+  final int width;
+  final int height;
 
-  GridState([List props = const []]) : super(props) {
-    gridState = [
-      ['R', 'B', 'G', 'Y', 'D', 'R'],
-      ['R', 'Y', 'D', 'D', 'R', 'G'],
-      ['B', 'G', 'B', 'Y', 'Y', 'B'],
-      ['R', 'G', 'G', 'B', 'D', 'R'],
-      ['D', 'B', 'R', 'D', 'R', 'G'],
-    ];
-  }
+  GridState(this.grid,
+      {@required this.width, @required this.height, List props = const []})
+      : super([grid, width, height]..addAll(props));
 
   int numberOfRows() {
-    return gridState.length;
+    return height;
   }
 
   int numberOfColumns() {
-    return gridState.first.length;
+    return width;
   }
 
   int numberOfItems() {
