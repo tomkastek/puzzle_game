@@ -14,6 +14,14 @@ class GridBloc extends Bloc<GridEvent, GridState> {
 
   @override
   Stream<GridState> mapEventToState(GridEvent event) async* {
+    if (event is GridDragBegan) {
+      yield* _mapDragBeganToState(event);
+    } else {
+      yield currentState;
+    }
+  }
+
+  Stream<GridState> _mapDragBeganToState(GridDragBegan began) async* {
     yield currentState;
   }
 
