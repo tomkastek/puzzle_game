@@ -48,6 +48,7 @@ class BoardField extends StatelessWidget {
                   alpha: 50,
                 ),
                 dragAnchor: DragAnchor.pointer,
+                maxSimultaneousDrags: 1,
                 onDragStarted: () {
                   print('set state different here');
                 },
