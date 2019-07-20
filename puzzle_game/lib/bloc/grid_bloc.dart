@@ -10,7 +10,8 @@ class GridBloc extends Bloc<GridEvent, GridState> {
   final width = 6;
 
   @override
-  GridState get initialState => GridState(randomGrid(), width: width, height: height);
+  GridState get initialState =>
+      Ready(randomGrid(), width: width, height: height);
 
   @override
   Stream<GridState> mapEventToState(GridEvent event) async* {
@@ -22,7 +23,8 @@ class GridBloc extends Bloc<GridEvent, GridState> {
   }
 
   Stream<GridState> _mapDragBeganToState(GridDragBegan began) async* {
-    yield currentState;
+    yield Dragging(currentState.grid,
+        width: currentState.width, height: currentState.height);
   }
 
   List<List<String>> randomGrid() {
@@ -30,7 +32,7 @@ class GridBloc extends Bloc<GridEvent, GridState> {
     var i = Random();
 
     for (int h = 0; h < height; h++) {
-      List<String> row =[];
+      List<String> row = [];
       for (int w = 0; w < width; w++) {
         var randomNumber = i.nextInt(5);
         row.add(circleVariants[randomNumber]);

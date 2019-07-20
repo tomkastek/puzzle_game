@@ -7,12 +7,6 @@ abstract class GridEvent extends Equatable {
 }
 
 class GridDragBegan extends GridEvent {
-  final int index;
-  final Offset position;
-
-  GridDragBegan({@required this.index, @required this.position})
-      : super([index, position]);
-
   @override
   String toString() => "Drag began";
 }

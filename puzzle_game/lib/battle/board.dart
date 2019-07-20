@@ -15,6 +15,7 @@ class Board extends StatelessWidget {
       BlocBuilder(
         bloc: gridBloc,
         builder: (context, GridState state) {
+          print('object');
           return Container(
             height: state.numberOfRows() / state.numberOfColumns() * boardWidth,
             width: boardWidth,
