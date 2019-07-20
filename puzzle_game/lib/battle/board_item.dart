@@ -9,27 +9,28 @@ import 'package:flutter/material.dart';
 /// Y = Yellow item
 /// D = Dark item
 class BoardItem extends StatelessWidget {
-  BoardItem({Key key, @required this.itemIdentifier}) : super(key: key);
+  BoardItem({Key key, @required this.itemIdentifier, this.alpha = 255}) : super(key: key);
 
-  String itemIdentifier;
+  final String itemIdentifier;
+  final int alpha;
 
   @override
   Widget build(BuildContext context) {
     switch (itemIdentifier) {
       case 'R':
-        return CircleItem(color: Colors.red,);
+        return CircleItem(color: Colors.red.withAlpha(alpha));
         break;
       case 'B':
-        return CircleItem(color: Colors.blue);
+        return CircleItem(color: Colors.blue.withAlpha(alpha));
         break;
       case 'G':
-        return CircleItem(color: Colors.green[700]);
+        return CircleItem(color: Colors.green[700].withAlpha(alpha));
         break;
       case 'Y':
-        return CircleItem(color: Colors.yellow[600]);
+        return CircleItem(color: Colors.yellow[600].withAlpha(alpha));
         break;
       case 'D':
-        return CircleItem(color: Colors.deepPurple);
+        return CircleItem(color: Colors.deepPurple.withAlpha(alpha));
         break;
       default:
         return Text(itemIdentifier.toString());
