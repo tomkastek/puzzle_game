@@ -21,9 +21,6 @@ class BoardField extends StatelessWidget {
 
     return BlocBuilder(
         bloc: gridBloc,
-        condition: (GridState oldState, GridState newState) {
-            return false;
-        },
         builder: (context, GridState state) {
           int x = state.xPos(index);
           int y = state.yPos(index);
@@ -35,12 +32,19 @@ class BoardField extends StatelessWidget {
             child: LayoutBuilder(builder: (context, constraints) {
               if (state is Dragging) {
                 // TODO: Add position to dragging. if dragging.position == x,y add alpha component
-                // TODO: Make those items to DragTargets and react on movement
-                return BoardItem(
-                  itemIdentifier: state.grid[x][y],
+                return DragTarget(
+                  builder: (context, candidateData, rejectedData) {
+                    return BoardItem(
+                      itemIdentifier: state.grid[x][y],
+                    );
+                  },
+                  onAccept: (int data) {
+                    gridBloc.dispatch(GridDragEnd(data, index));
+                  },
                 );
               }
-              return Draggable(
+              print((constraints.biggest.height * 1.1) / 1.5);
+              return Draggable<int>(
                 child: BoardItem(
                   itemIdentifier: state.grid[x][y],
                 ),
@@ -61,9 +65,13 @@ class BoardField extends StatelessWidget {
                 ),
                 dragAnchor: DragAnchor.pointer,
                 maxSimultaneousDrags: 1,
+                data: index,
                 onDragStarted: () {
                   print('Drag started');
                   gridBloc.dispatch(GridDragBegan());
+                },
+                onDraggableCanceled: (velocity, offset) {
+                  gridBloc.dispatch(GridDragCancelled());
                 },
               );
             }),

@@ -17,6 +17,10 @@ class GridBloc extends Bloc<GridEvent, GridState> {
   Stream<GridState> mapEventToState(GridEvent event) async* {
     if (event is GridDragBegan) {
       yield* _mapDragBeganToState(event);
+    } else if (event is GridDragEnd) {
+      yield* _mapDragEndToState(event);
+    } else if (event is GridDragCancelled) {
+      yield* _mapDragCancelledToState(event);
     } else {
       yield currentState;
     }
@@ -24,6 +28,29 @@ class GridBloc extends Bloc<GridEvent, GridState> {
 
   Stream<GridState> _mapDragBeganToState(GridDragBegan began) async* {
     yield Dragging(currentState.grid,
+        width: currentState.width, height: currentState.height);
+  }
+
+  Stream<GridState> _mapDragEndToState(GridDragEnd end) async* {
+    if (end.initial == end.changeWith) {
+      yield Ready(currentState.grid,
+          width: currentState.width, height: currentState.height);
+    } else {
+      var x1 = currentState.xPos(end.initial);
+      var y1 = currentState.yPos(end.initial);
+      var x2 = currentState.xPos(end.changeWith);
+      var y2 = currentState.yPos(end.changeWith);
+      var gridCopy = currentState.grid;
+      var circleVariant = gridCopy[x1][y1];
+      gridCopy[x1][y1] = gridCopy[x2][y2];
+      gridCopy[x2][y2] = circleVariant;
+      yield Ready(gridCopy,
+          width: currentState.width, height: currentState.height);
+    }
+  }
+
+  Stream<GridState> _mapDragCancelledToState(GridDragCancelled cancelled) async* {
+    yield Ready(currentState.grid,
         width: currentState.width, height: currentState.height);
   }
 
