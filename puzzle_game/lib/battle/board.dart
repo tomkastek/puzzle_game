@@ -14,7 +14,11 @@ class Board extends StatelessWidget {
     return Column(children: <Widget>[
       BlocBuilder(
         bloc: gridBloc,
+        condition: (before, next) {
+          return false;
+        },
         builder: (context, GridState state) {
+          print('object');
           return Container(
             height: state.numberOfRows() / state.numberOfColumns() * boardWidth,
             width: boardWidth,
@@ -23,7 +27,9 @@ class Board extends StatelessWidget {
               crossAxisCount: state.numberOfColumns(),
               childAspectRatio: 1,
               children: List.generate(state.numberOfItems(), (index) {
-                return BoardField(index: index);
+                var x = state.xPos(index);
+                var y = state.yPos(index);
+                return BoardField(index: index, x: x, y: y);
               }),
             ),
           );

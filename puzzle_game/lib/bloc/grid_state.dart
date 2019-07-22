@@ -1,14 +1,19 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-class GridState extends Equatable {
+@immutable
+abstract class GridState extends Equatable {
   final List<List<String>> grid;
   final int width;
   final int height;
+  final List<int> history;
 
   GridState(this.grid,
-      {@required this.width, @required this.height, List props = const []})
-      : super([grid, width, height]..addAll(props));
+      {@required this.width, @required this.height, @required this.history , List props = const []})
+      : assert(width != null),
+        assert(height != null),
+        assert(height != null),
+        super([grid, width, height, history]..addAll(props));
 
   int numberOfRows() {
     return height;
@@ -29,4 +34,17 @@ class GridState extends Equatable {
   int yPos(int fromIndex) {
     return (fromIndex % numberOfColumns());
   }
+}
+
+class Ready extends GridState {
+  Ready(List<List<String>> grid, {@required int width, @required int height, @required List<int> history})
+      : super(grid, width: width, height: height, history: history);
+}
+
+class Dragging extends GridState {
+  final int draggedIndex;
+
+  Dragging(List<List<String>> grid,
+      {@required int width, @required int height, @required this.draggedIndex, @required List<int> history})
+      : super(grid, width: width, height: height, props: [draggedIndex], history: history);
 }
