@@ -11,71 +11,80 @@ import 'package:puzzle_game/bloc/grid_state.dart';
 /// The item of the gridState at x/y a will be displayed on the field.
 // TODO: replace hardcoded values with propertiers
 class BoardField extends StatelessWidget {
-  BoardField({Key key, this.index}) : super(key: key);
+  BoardField(
+      {Key key, @required this.index, @required this.x, @required this.y})
+      : super(key: key);
 
   final int index;
+  final int x;
+  final int y;
 
   @override
   Widget build(BuildContext context) {
     final gridBloc = BlocProvider.of<GridBloc>(context);
-
-    return BlocBuilder(
-        bloc: gridBloc,
-        builder: (context, GridState state) {
-          int x = state.xPos(index);
-          int y = state.yPos(index);
-          var dark = x % 2 == 0 ? index % 2 == 0 : index % 2 == 1;
-          return Container(
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.black, width: 0.5),
-                color: dark ? Colors.brown[500] : Colors.brown[700]),
-            child: LayoutBuilder(builder: (context, constraints) {
-              if (state is Dragging) {
-                // TODO: Add position to dragging. if dragging.position == x,y add alpha component
-                return DragTarget(
-                  builder: (context, candidateData, rejectedData) {
-                    return BoardItem(
+    var dark = x % 2 == 0 ? index % 2 == 0 : index % 2 == 1;
+    return Container(
+      decoration: BoxDecoration(
+          border: Border.all(color: Colors.black, width: 0.5),
+          color: dark ? Colors.brown[500] : Colors.brown[700]),
+      child: LayoutBuilder(builder: (context, constraints) {
+        return BlocBuilder(
+          bloc: gridBloc,
+          builder: (context, GridState state) {
+            if (state is Dragging) {
+              return state.draggedIndex != index
+                  ? DragTarget(
+                      builder: (context, candidateData, rejectedData) {
+                        return BoardItem(
+                          itemIdentifier: state.grid[x][y],
+                        );
+                      },
+                      onWillAccept: (int) {
+                        gridBloc.dispatch(
+                            GridDragHovered(index));
+                        return true;
+                      },
+                      onAccept: (int data) {
+                        gridBloc.dispatch(GridDragEnd(data, index));
+                      },
+                    )
+                  : BoardItem(
                       itemIdentifier: state.grid[x][y],
+                      alpha: 50,
                     );
-                  },
-                  onAccept: (int data) {
-                    gridBloc.dispatch(GridDragEnd(data, index));
-                  },
-                );
-              }
-              print((constraints.biggest.height * 1.1) / 1.5);
-              return Draggable<int>(
+            }
+            return Draggable<int>(
+              child: BoardItem(
+                itemIdentifier: state.grid[x][y],
+              ),
+              feedback: Container(
+                height: constraints.biggest.height * 1.1,
+                width: constraints.biggest.width * 1.1,
+                transform: Matrix4.translationValues(
+                    -(constraints.biggest.width * 1.1) / 2,
+                    -(constraints.biggest.height * 1.1) / 1.5,
+                    0),
                 child: BoardItem(
                   itemIdentifier: state.grid[x][y],
                 ),
-                feedback: Container(
-                  height: constraints.biggest.height * 1.1,
-                  width: constraints.biggest.width * 1.1,
-                  transform: Matrix4.translationValues(
-                      -(constraints.biggest.width * 1.1) / 2,
-                      -(constraints.biggest.height * 1.1) / 1.5,
-                      0),
-                  child: BoardItem(
-                    itemIdentifier: state.grid[x][y],
-                  ),
-                ),
-                childWhenDragging: BoardItem(
-                  itemIdentifier: state.grid[x][y],
-                  alpha: 50,
-                ),
-                dragAnchor: DragAnchor.pointer,
-                maxSimultaneousDrags: 1,
-                data: index,
-                onDragStarted: () {
-                  print('Drag started');
-                  gridBloc.dispatch(GridDragBegan());
-                },
-                onDraggableCanceled: (velocity, offset) {
-                  gridBloc.dispatch(GridDragCancelled());
-                },
-              );
-            }),
-          );
-        });
+              ),
+              childWhenDragging: BoardItem(
+                itemIdentifier: state.grid[x][y],
+                alpha: 50,
+              ),
+              dragAnchor: DragAnchor.pointer,
+              maxSimultaneousDrags: 1,
+              data: index,
+              onDragStarted: () {
+                gridBloc.dispatch(GridDragBegan(index));
+              },
+              onDraggableCanceled: (velocity, offset) {
+                gridBloc.dispatch(GridDragCancelled());
+              },
+            );
+          },
+        );
+      }),
+    );
   }
 }

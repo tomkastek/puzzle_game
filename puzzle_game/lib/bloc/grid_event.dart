@@ -7,6 +7,10 @@ abstract class GridEvent extends Equatable {
 }
 
 class GridDragBegan extends GridEvent {
+  final int index;
+
+  GridDragBegan(this.index);
+
   @override
   String toString() => "Drag began";
 }
@@ -24,4 +28,13 @@ class GridDragEnd extends GridEvent {
 class GridDragCancelled extends GridEvent {
   @override
   String toString() => "Drag canceleld";
+}
+
+class GridDragHovered extends GridEvent {
+  final int to;
+
+  GridDragHovered(this.to);
+
+  @override
+  String toString() => "Drag hovered to $to";
 }

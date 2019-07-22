@@ -6,12 +6,14 @@ abstract class GridState extends Equatable {
   final List<List<String>> grid;
   final int width;
   final int height;
+  final List<int> history;
 
   GridState(this.grid,
-      {@required this.width, @required this.height, List props = const []})
+      {@required this.width, @required this.height, @required this.history , List props = const []})
       : assert(width != null),
         assert(height != null),
-        super([grid, width, height]..addAll(props));
+        assert(height != null),
+        super([grid, width, height, history]..addAll(props));
 
   int numberOfRows() {
     return height;
@@ -35,12 +37,14 @@ abstract class GridState extends Equatable {
 }
 
 class Ready extends GridState {
-  Ready(List<List<String>> grid, {@required int width, @required int height})
-      : super(grid, width: width, height: height);
+  Ready(List<List<String>> grid, {@required int width, @required int height, @required List<int> history})
+      : super(grid, width: width, height: height, history: history);
 }
 
 class Dragging extends GridState {
+  final int draggedIndex;
+
   Dragging(List<List<String>> grid,
-      {@required int width, @required int height})
-      : super(grid, width: width, height: height);
+      {@required int width, @required int height, @required this.draggedIndex, @required List<int> history})
+      : super(grid, width: width, height: height, props: [draggedIndex], history: history);
 }
