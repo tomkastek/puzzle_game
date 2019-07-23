@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:puzzle_game/battle/board_item.dart';
+import 'package:puzzle_game/battle/BoardDraggable.dart';
+import 'package:puzzle_game/battle/BoardItemWhileDragging.dart';
 import 'package:puzzle_game/bloc/grid_bloc.dart';
-import 'package:puzzle_game/bloc/grid_event.dart';
 import 'package:puzzle_game/bloc/grid_state.dart';
 
 /// This class sets up one field of the board of the game
@@ -32,59 +32,21 @@ class BoardField extends StatelessWidget {
           bloc: gridBloc,
           builder: (context, GridState state) {
             if (state is Dragging) {
-              return state.draggedIndex != index
-                  ? DragTarget(
-                      builder: (context, candidateData, rejectedData) {
-                        return BoardItem(
-                          itemIdentifier: state.grid[x][y],
-                        );
-                      },
-                      onWillAccept: (int) {
-                        gridBloc.dispatch(
-                            GridDragHovered(index));
-                        return true;
-                      },
-                      onAccept: (int data) {
-                        gridBloc.dispatch(GridDragEnd(data, index));
-                      },
-                    )
-                  : BoardItem(
-                      itemIdentifier: state.grid[x][y],
-                      alpha: 50,
-                    );
+              BoardItemWhileDragging(index: index, state: state, y: y, x: x);
             }
-            return Draggable<int>(
-              child: BoardItem(
-                itemIdentifier: state.grid[x][y],
-              ),
-              feedback: Container(
-                height: constraints.biggest.height * 1.1,
-                width: constraints.biggest.width * 1.1,
-                transform: Matrix4.translationValues(
-                    -(constraints.biggest.width * 1.1) / 2,
-                    -(constraints.biggest.height * 1.1) / 1.5,
-                    0),
-                child: BoardItem(
-                  itemIdentifier: state.grid[x][y],
-                ),
-              ),
-              childWhenDragging: BoardItem(
-                itemIdentifier: state.grid[x][y],
-                alpha: 50,
-              ),
-              dragAnchor: DragAnchor.pointer,
-              maxSimultaneousDrags: 1,
-              data: index,
-              onDragStarted: () {
-                gridBloc.dispatch(GridDragBegan(index));
-              },
-              onDraggableCanceled: (velocity, offset) {
-                gridBloc.dispatch(GridDragCancelled());
-              },
-            );
+            var feedbackHeight = constraints.biggest.height * 1.1;
+            var feedbackWidth = constraints.biggest.width * 1.1;
+            return BoardDraggable(
+                x: x,
+                y: y,
+                state: state,
+                index: index,
+                feedbackHeight: feedbackHeight,
+                feedbackWidth: feedbackWidth);
           },
         );
       }),
     );
   }
 }
+
