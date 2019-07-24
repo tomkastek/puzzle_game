@@ -5,7 +5,6 @@ import 'package:puzzle_game/bloc/grid_bloc.dart';
 import 'package:puzzle_game/bloc/grid_event.dart';
 import 'package:puzzle_game/bloc/grid_state.dart';
 
-
 /// This widget is a object on the board in 'Ready' state.
 /// Every field represented by this widget is a possible start point for user
 /// interaction. It can be dragged over the board.
@@ -30,6 +29,7 @@ class BoardDraggable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final gridBloc = BlocProvider.of<GridBloc>(context);
+
     return Draggable<int>(
       child: BoardItem(
         itemIdentifier: state.grid[x][y],
@@ -38,19 +38,12 @@ class BoardDraggable extends StatelessWidget {
         height: feedbackHeight,
         width: feedbackWidth,
         transform: Matrix4.translationValues(
-            -feedbackHeight / 2,
-            -feedbackWidth / 1.5,
-            0),
+            -feedbackHeight / 2, -feedbackWidth / 1.5, 0),
         child: BoardItem(
           itemIdentifier: state.grid[x][y],
         ),
       ),
-      childWhenDragging: BoardItem(
-        itemIdentifier: state.grid[x][y],
-        alpha: 50,
-      ),
       dragAnchor: DragAnchor.pointer,
-      maxSimultaneousDrags: 1,
       data: index,
       onDragStarted: () {
         gridBloc.dispatch(GridDragBegan(index));

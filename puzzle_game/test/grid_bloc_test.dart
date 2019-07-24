@@ -33,7 +33,5 @@ void main() {
 
       gridBloc.dispatch(GridDragBegan(0));
     });
-
-
   });
 }
