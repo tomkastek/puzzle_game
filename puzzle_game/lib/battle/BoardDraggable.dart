@@ -29,19 +29,17 @@ class BoardDraggable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final gridBloc = BlocProvider.of<GridBloc>(context);
+    var item = state.grid[x][y];
 
     return Draggable<int>(
       child: BoardItem(
-        itemIdentifier: state.grid[x][y],
+        itemIdentifier: item,
       ),
-      feedback: Container(
+      feedback: BoardDraggableFeedback(
         height: feedbackHeight,
         width: feedbackWidth,
-        transform: Matrix4.translationValues(
-            -feedbackHeight / 2, -feedbackWidth / 1.5, 0),
-        child: BoardItem(
-          itemIdentifier: state.grid[x][y],
-        ),
+        item: item,
+        superContext: context,
       ),
       dragAnchor: DragAnchor.pointer,
       data: index,
@@ -50,6 +48,40 @@ class BoardDraggable extends StatelessWidget {
       },
       onDraggableCanceled: (velocity, offset) {
         gridBloc.dispatch(GridDragCancelled());
+      },
+    );
+  }
+}
+
+class BoardDraggableFeedback extends StatelessWidget {
+  final double height;
+  final double width;
+  final String item;
+  final BuildContext superContext; // Context does not contain GridBloc
+
+  const BoardDraggableFeedback(
+      {Key key, this.height, this.width, this.item, this.superContext})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final gridBloc = BlocProvider.of<GridBloc>(superContext);
+
+    return BlocBuilder(
+      bloc: gridBloc,
+      builder: (context, GridState state) {
+        // TODO: Create a global touch point state to show trnsform feedback into board
+        return (state is Ready)
+            ? Container()
+            : Container(
+                height: height,
+                width: width,
+                transform:
+                    Matrix4.translationValues(-height / 2, -width / 1.5, 0),
+                child: BoardItem(
+                  itemIdentifier: item,
+                ),
+              );
       },
     );
   }
