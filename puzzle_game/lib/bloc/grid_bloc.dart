@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:puzzle_game/bloc/grid_event.dart';
@@ -8,6 +9,7 @@ class GridBloc extends Bloc<GridEvent, GridState> {
   final List<String> circleVariants = ['R', 'B', 'G', 'Y', 'D'];
   int height;
   int width;
+  Timer _timer;
 
   GridBloc({this.height = 5, this.width = 6});
 
@@ -29,18 +31,31 @@ class GridBloc extends Bloc<GridEvent, GridState> {
     }
   }
 
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
   Stream<GridState> _mapDragBeganToState(GridDragBegan began) async* {
     yield Dragging(currentState.grid, draggedIndex: began.index);
   }
 
   Stream<GridState> _mapDragEndToState(GridDragEnd end) async* {
+    _timer.cancel();
     yield Ready(currentState.grid);
   }
 
   Stream<GridState> _mapDragHoveredToState(GridDragHovered event) async* {
     if (currentState is Dragging) {
-      var gridCopy = _changeCircles((currentState as Dragging).draggedIndex, event.to);
+      var gridCopy =
+          _changeCircles((currentState as Dragging).draggedIndex, event.to);
       yield Dragging(gridCopy, draggedIndex: event.to);
+    }
+    if (_timer == null || !_timer.isActive) {
+      _timer = Timer(Duration(seconds: 6), () {
+        dispatch(GridDragEnd());
+      });
     }
   }
 
