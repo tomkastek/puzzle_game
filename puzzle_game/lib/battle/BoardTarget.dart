@@ -37,7 +37,7 @@ class BoardTarget extends StatelessWidget {
         return true;
       },
       onAccept: (int data) {
-        gridBloc.dispatch(GridDragEnd(data, index));
+        gridBloc.dispatch(GridDragEnd());
       },
     );
   }

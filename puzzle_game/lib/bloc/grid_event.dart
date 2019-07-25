@@ -16,13 +16,8 @@ class GridDragBegan extends GridEvent {
 }
 
 class GridDragEnd extends GridEvent {
-  final int initial;
-  final int changeWith;
-
-  GridDragEnd(this.initial, this.changeWith);
-
   @override
-  String toString() => "Drag end { initial: $initial, vhangeWith: $changeWith }";
+  String toString() => "Drag end";
 }
 
 class GridDragCancelled extends GridEvent {

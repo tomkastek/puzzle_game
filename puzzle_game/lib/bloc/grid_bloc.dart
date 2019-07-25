@@ -34,18 +34,12 @@ class GridBloc extends Bloc<GridEvent, GridState> {
   }
 
   Stream<GridState> _mapDragEndToState(GridDragEnd end) async* {
-    if (end.initial == end.changeWith) {
-      yield Ready(currentState.grid);
-    } else {
-      var gridCopy = changeCircles(end.initial, end.changeWith);
-      yield Ready(gridCopy);
-    }
+    yield Ready(currentState.grid);
   }
 
   Stream<GridState> _mapDragHoveredToState(GridDragHovered event) async* {
-    var state = currentState;
-    if (state is Dragging) {
-      var gridCopy = changeCircles(state.draggedIndex, event.to);
+    if (currentState is Dragging) {
+      var gridCopy = _changeCircles((currentState as Dragging).draggedIndex, event.to);
       yield Dragging(gridCopy, draggedIndex: event.to);
     }
   }
@@ -70,16 +64,44 @@ class GridBloc extends Bloc<GridEvent, GridState> {
     return grid;
   }
 
-  List<List<String>> changeCircles(int first, int second) {
+  List<List<String>> _changeCircles(int first, int second) {
     var x1 = xPos(first);
     var y1 = yPos(first);
     var x2 = xPos(second);
     var y2 = yPos(second);
     var gridCopy = currentState.grid;
     var circleVariant = gridCopy[x1][y1];
-    gridCopy[x1][y1] = gridCopy[x2][y2];
-    gridCopy[x2][y2] = circleVariant;
+    if (_areNeighbours(x1, y1, x2, y2)) {
+      gridCopy[x1][y1] = gridCopy[x2][y2];
+      gridCopy[x2][y2] = circleVariant;
+    } else if (_areSecondNeighbours(x1, y1, x2, y2)) {
+      var xBetween = (x1 + x2) ~/ 2;
+      var yBetween = (y1 + y2) ~/ 2;
+      gridCopy[x1][y1] = gridCopy[xBetween][yBetween];
+      gridCopy[xBetween][yBetween] = gridCopy[x2][y2];
+      gridCopy[x2][y2] = circleVariant;
+    } else {
+      // No support for longer distances
+      // TODO: "return" false to keep the dragged index the same
+      gridCopy[x1][y1] = gridCopy[x2][y2];
+      gridCopy[x2][y2] = circleVariant;
+    }
     return gridCopy;
+  }
+
+  bool _areNeighbours(int x1, int y1, int x2, int y2) {
+    if ([-1, 0, 1].contains(x1 - x2) && [-1, 0, 1].contains(y1 - y2)) {
+      return true;
+    }
+    return false;
+  }
+
+  bool _areSecondNeighbours(int x1, int y1, int x2, int y2) {
+    if (([2, -2].contains(x1 - x2) && [-2, -1, 0, 1, 2].contains(y1 - y2)) ||
+        ([-2, -1, 0, 1, 2].contains(x1 - x2) && [-2, 2].contains(y1 - y2))) {
+      return true;
+    }
+    return false;
   }
 
   // MARK: Starting helper functions here
