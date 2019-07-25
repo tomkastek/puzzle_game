@@ -32,6 +32,7 @@ class BoardTarget extends StatelessWidget {
         );
       },
       onWillAccept: (int) {
+        print(index);
         gridBloc.dispatch(GridDragHovered(index));
         return true;
       },

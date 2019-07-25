@@ -20,7 +20,6 @@ class BoardField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final gridBloc = BlocProvider.of<GridBloc>(context);
     var dark = x % 2 == 0 ? index % 2 == 0 : index % 2 == 1;
     var backgroundColor = dark ? Colors.brown[500] : Colors.brown[700];
 
@@ -29,9 +28,8 @@ class BoardField extends StatelessWidget {
           border: Border.all(color: Colors.black, width: 0.5),
           color: backgroundColor),
       child: LayoutBuilder(builder: (context, constraints) {
-        return BlocBuilder(
-          bloc: gridBloc,
-          builder: (context, GridState state) {
+        return BlocBuilder<GridBloc, GridState>(
+          builder: (context, state) {
             if (state is Dragging) {
               return BoardItemWhileDragging(
                   index: index, state: state, y: y, x: x);
