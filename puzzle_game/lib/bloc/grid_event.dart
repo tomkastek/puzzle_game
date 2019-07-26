@@ -28,3 +28,12 @@ class GridDragHovered extends GridEvent {
   @override
   String toString() => "Drag hovered to $to";
 }
+
+class ResolvedGrid extends GridEvent {
+  final int checkedIndex;
+
+  ResolvedGrid(this.checkedIndex);
+
+  @override
+  String toString() => "resolved Grid with last checked position: { $checkedIndex }";
+}

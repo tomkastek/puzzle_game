@@ -23,6 +23,8 @@ class Dragging extends GridState {
 }
 
 class Resolving extends GridState {
-  Resolving(List<List<CircleItem>> grid)
-      : super(grid);
+  final int lastCheckedIndex;
+
+  Resolving(List<List<CircleItem>> grid, this.lastCheckedIndex)
+      : super(grid, props: [lastCheckedIndex]);
 }

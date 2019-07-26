@@ -9,7 +9,8 @@ import 'package:bloc/bloc.dart';
 class GridBloc extends Bloc<GridEvent, GridState> {
   int height;
   int width;
-  Timer _timer;
+  Timer _movementTimer;
+  Timer _resolvingTimer;
 
   GridBloc({this.height = 5, this.width = 6});
 
@@ -31,7 +32,8 @@ class GridBloc extends Bloc<GridEvent, GridState> {
 
   @override
   void dispose() {
-    _timer?.cancel();
+    _movementTimer?.cancel();
+    _resolvingTimer?.cancel();
     super.dispose();
   }
 
@@ -41,11 +43,14 @@ class GridBloc extends Bloc<GridEvent, GridState> {
   }
 
   Stream<GridState> _mapDragEndToState(GridDragEnd end) async* {
-    _timer?.cancel();
+    _movementTimer?.cancel();
     if (currentState is Dragging) {
       if ((currentState as Dragging).movingStarted) {
-        // TODO: Define a "end" state here
-        yield Ready(currentState.grid);
+        yield Resolving(currentState.grid, 0);
+        _resolvingTimer = Timer(Duration(milliseconds: 200), () {
+          ResolvedGrid(0);
+        });
+        return;
       }
     }
     // Default is that nothing moved
@@ -58,9 +63,8 @@ class GridBloc extends Bloc<GridEvent, GridState> {
           _changeCircles((currentState as Dragging).draggedIndex, event.to);
       yield Dragging(gridCopy, draggedIndex: event.to, movingStarted: true);
     }
-    if (_timer == null || !_timer.isActive) {
-      _timer = Timer(Duration(seconds: 6), () {
-        print('Disptach end');
+    if (_movementTimer == null || !_movementTimer.isActive) {
+      _movementTimer = Timer(Duration(seconds: 6), () {
         dispatch(GridDragEnd());
       });
     }
