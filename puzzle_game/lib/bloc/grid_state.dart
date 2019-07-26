@@ -21,3 +21,8 @@ class Dragging extends GridState {
       {@required this.draggedIndex, @required this.movingStarted})
       : super(grid, props: [draggedIndex, movingStarted]);
 }
+
+class Resolving extends GridState {
+  Resolving(List<List<CircleItem>> grid)
+      : super(grid);
+}
