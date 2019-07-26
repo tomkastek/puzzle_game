@@ -28,7 +28,7 @@ class BoardTarget extends StatelessWidget {
     return DragTarget(
       builder: (context, candidateData, rejectedData) {
         return BoardItem(
-          itemIdentifier: state.grid[x][y],
+          item: state.grid[x][y],
         );
       },
       onWillAccept: (int) {

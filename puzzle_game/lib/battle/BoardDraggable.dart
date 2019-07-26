@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:puzzle_game/battle/CircleItem.dart';
 import 'package:puzzle_game/battle/board_item.dart';
 import 'package:puzzle_game/bloc/grid_bloc.dart';
 import 'package:puzzle_game/bloc/grid_event.dart';
@@ -33,7 +34,7 @@ class BoardDraggable extends StatelessWidget {
 
     return Draggable<int>(
       child: BoardItem(
-        itemIdentifier: item,
+        item: item,
       ),
       feedback: BoardDraggableFeedback(
         height: feedbackHeight,
@@ -56,7 +57,7 @@ class BoardDraggable extends StatelessWidget {
 class BoardDraggableFeedback extends StatelessWidget {
   final double height;
   final double width;
-  final String item;
+  final CircleItem item;
   final BuildContext superContext; // Context does not contain GridBloc
 
   const BoardDraggableFeedback(
@@ -79,7 +80,7 @@ class BoardDraggableFeedback extends StatelessWidget {
                 transform:
                     Matrix4.translationValues(-height / 2, -width / 1.5, 0),
                 child: BoardItem(
-                  itemIdentifier: item,
+                  item: item,
                 ),
               );
       },

@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:puzzle_game/battle/CircleItem.dart';
 import 'package:puzzle_game/bloc/grid_event.dart';
 import 'package:puzzle_game/bloc/grid_state.dart';
 import 'package:bloc/bloc.dart';
 
 class GridBloc extends Bloc<GridEvent, GridState> {
-  final List<String> circleVariants = ['R', 'B', 'G', 'Y', 'D'];
   int height;
   int width;
   Timer _timer;
@@ -64,22 +64,22 @@ class GridBloc extends Bloc<GridEvent, GridState> {
     yield Ready(currentState.grid);
   }
 
-  List<List<String>> randomGrid() {
-    List<List<String>> grid = [];
+  List<List<CircleItem>> randomGrid() {
+    List<List<CircleItem>> grid = [];
     var i = Random();
 
     for (int h = 0; h < height; h++) {
-      List<String> row = [];
+      List<CircleItem> row = [];
       for (int w = 0; w < width; w++) {
         var randomNumber = i.nextInt(5);
-        row.add(circleVariants[randomNumber]);
+        row.add(CircleItem(CircleVariant.values[randomNumber]));
       }
       grid.add(row);
     }
     return grid;
   }
 
-  List<List<String>> _changeCircles(int first, int second) {
+  List<List<CircleItem>> _changeCircles(int first, int second) {
     var x1 = xPos(first);
     var y1 = yPos(first);
     var x2 = xPos(second);

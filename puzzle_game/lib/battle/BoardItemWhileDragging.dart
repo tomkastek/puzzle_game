@@ -24,7 +24,7 @@ class BoardItemWhileDragging extends StatelessWidget {
     return state.draggedIndex != index
         ? BoardTarget(x: x, y: y, state: state, index: index)
         : BoardItem(
-            itemIdentifier: state.grid[x][y],
+            item: state.grid[x][y],
             alpha: 50,
           );
   }
