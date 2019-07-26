@@ -20,11 +20,6 @@ class GridDragEnd extends GridEvent {
   String toString() => "Drag end";
 }
 
-class GridDragCancelled extends GridEvent {
-  @override
-  String toString() => "Drag canceleld";
-}
-
 class GridDragHovered extends GridEvent {
   final int to;
 

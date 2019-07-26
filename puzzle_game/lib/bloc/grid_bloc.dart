@@ -22,8 +22,6 @@ class GridBloc extends Bloc<GridEvent, GridState> {
       yield* _mapDragBeganToState(event);
     } else if (event is GridDragEnd) {
       yield* _mapDragEndToState(event);
-    } else if (event is GridDragCancelled) {
-      yield* _mapDragCancelledToState(event);
     } else if (event is GridDragHovered) {
       yield* _mapDragHoveredToState(event);
     } else {
@@ -38,11 +36,19 @@ class GridBloc extends Bloc<GridEvent, GridState> {
   }
 
   Stream<GridState> _mapDragBeganToState(GridDragBegan began) async* {
-    yield Dragging(currentState.grid, draggedIndex: began.index);
+    yield Dragging(currentState.grid,
+        draggedIndex: began.index, movingStarted: false);
   }
 
   Stream<GridState> _mapDragEndToState(GridDragEnd end) async* {
-    _timer.cancel();
+    _timer?.cancel();
+    if (currentState is Dragging) {
+      if ((currentState as Dragging).movingStarted) {
+        // TODO: Define a "end" state here
+        yield Ready(currentState.grid);
+      }
+    }
+    // Default is that nothing moved
     yield Ready(currentState.grid);
   }
 
@@ -50,18 +56,14 @@ class GridBloc extends Bloc<GridEvent, GridState> {
     if (currentState is Dragging) {
       var gridCopy =
           _changeCircles((currentState as Dragging).draggedIndex, event.to);
-      yield Dragging(gridCopy, draggedIndex: event.to);
+      yield Dragging(gridCopy, draggedIndex: event.to, movingStarted: true);
     }
     if (_timer == null || !_timer.isActive) {
       _timer = Timer(Duration(seconds: 6), () {
+        print('Disptach end');
         dispatch(GridDragEnd());
       });
     }
-  }
-
-  Stream<GridState> _mapDragCancelledToState(
-      GridDragCancelled cancelled) async* {
-    yield Ready(currentState.grid);
   }
 
   List<List<CircleItem>> randomGrid() {

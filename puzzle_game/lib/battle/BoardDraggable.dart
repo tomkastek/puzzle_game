@@ -48,7 +48,7 @@ class BoardDraggable extends StatelessWidget {
         gridBloc.dispatch(GridDragBegan(index));
       },
       onDraggableCanceled: (velocity, offset) {
-        gridBloc.dispatch(GridDragCancelled());
+        gridBloc.dispatch(GridDragEnd());
       },
     );
   }
@@ -71,7 +71,7 @@ class BoardDraggableFeedback extends StatelessWidget {
     return BlocBuilder(
       bloc: gridBloc,
       builder: (context, GridState state) {
-        // TODO: Create a global touch point state to show trnsform feedback into board
+        // TODO: Create a global touch point state to show transform feedback into board
         return (state is Ready)
             ? Container()
             : Container(

@@ -15,7 +15,9 @@ class Ready extends GridState {
 
 class Dragging extends GridState {
   final int draggedIndex;
+  final bool movingStarted;
 
-  Dragging(List<List<CircleItem>> grid, {@required this.draggedIndex})
-      : super(grid, props: [draggedIndex]);
+  Dragging(List<List<CircleItem>> grid,
+      {@required this.draggedIndex, @required this.movingStarted})
+      : super(grid, props: [draggedIndex, movingStarted]);
 }
