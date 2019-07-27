@@ -2,9 +2,10 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:puzzle_game/battle/CircleItem.dart';
-import 'package:puzzle_game/bloc/grid_event.dart';
-import 'package:puzzle_game/bloc/grid_state.dart';
+import 'package:puzzle_game/bloc/grid/grid_event.dart';
+import 'package:puzzle_game/bloc/grid/grid_state.dart';
 import 'package:bloc/bloc.dart';
+import 'package:puzzle_game/model/board_grid.dart';
 
 class GridBloc extends Bloc<GridEvent, GridState> {
   int height;
@@ -15,7 +16,7 @@ class GridBloc extends Bloc<GridEvent, GridState> {
   GridBloc({this.height = 5, this.width = 6});
 
   @override
-  GridState get initialState => Ready(randomGrid());
+  GridState get initialState => Ready(BoardGrid.random(height, width));
 
   @override
   Stream<GridState> mapEventToState(GridEvent event) async* {
@@ -59,70 +60,17 @@ class GridBloc extends Bloc<GridEvent, GridState> {
 
   Stream<GridState> _mapDragHoveredToState(GridDragHovered event) async* {
     if (currentState is Dragging) {
-      var gridCopy =
-          _changeCircles((currentState as Dragging).draggedIndex, event.to);
-      yield Dragging(gridCopy, draggedIndex: event.to, movingStarted: true);
+      currentState.grid.changeCircles(
+          pointFromIndex((currentState as Dragging).draggedIndex),
+          pointFromIndex(event.to));
+      yield Dragging(currentState.grid,
+          draggedIndex: event.to, movingStarted: true);
     }
     if (_movementTimer == null || !_movementTimer.isActive) {
       _movementTimer = Timer(Duration(seconds: 6), () {
         dispatch(GridDragEnd());
       });
     }
-  }
-
-  List<List<CircleItem>> randomGrid() {
-    List<List<CircleItem>> grid = [];
-    var i = Random();
-
-    for (int h = 0; h < height; h++) {
-      List<CircleItem> row = [];
-      for (int w = 0; w < width; w++) {
-        var randomNumber = i.nextInt(5);
-        row.add(CircleItem(CircleVariant.values[randomNumber]));
-      }
-      grid.add(row);
-    }
-    return grid;
-  }
-
-  List<List<CircleItem>> _changeCircles(int first, int second) {
-    var x1 = xPos(first);
-    var y1 = yPos(first);
-    var x2 = xPos(second);
-    var y2 = yPos(second);
-    var gridCopy = currentState.grid;
-    var circleVariant = gridCopy[x1][y1];
-    if (_areNeighbours(x1, y1, x2, y2)) {
-      gridCopy[x1][y1] = gridCopy[x2][y2];
-      gridCopy[x2][y2] = circleVariant;
-    } else if (_areSecondNeighbours(x1, y1, x2, y2)) {
-      var xBetween = (x1 + x2) ~/ 2;
-      var yBetween = (y1 + y2) ~/ 2;
-      gridCopy[x1][y1] = gridCopy[xBetween][yBetween];
-      gridCopy[xBetween][yBetween] = gridCopy[x2][y2];
-      gridCopy[x2][y2] = circleVariant;
-    } else {
-      // No support for longer distances
-      // TODO: "return" false to keep the dragged index the same
-      gridCopy[x1][y1] = gridCopy[x2][y2];
-      gridCopy[x2][y2] = circleVariant;
-    }
-    return gridCopy;
-  }
-
-  bool _areNeighbours(int x1, int y1, int x2, int y2) {
-    if ([-1, 0, 1].contains(x1 - x2) && [-1, 0, 1].contains(y1 - y2)) {
-      return true;
-    }
-    return false;
-  }
-
-  bool _areSecondNeighbours(int x1, int y1, int x2, int y2) {
-    if (([2, -2].contains(x1 - x2) && [-2, -1, 0, 1, 2].contains(y1 - y2)) ||
-        ([-2, -1, 0, 1, 2].contains(x1 - x2) && [-2, 2].contains(y1 - y2))) {
-      return true;
-    }
-    return false;
   }
 
   // MARK: Starting helper functions here
@@ -136,6 +84,10 @@ class GridBloc extends Bloc<GridEvent, GridState> {
 
   int numberOfItems() {
     return numberOfRows() * numberOfColumns();
+  }
+
+  Point<int> pointFromIndex(int index) {
+    return Point(xPos(index), yPos(index));
   }
 
   int xPos(int fromIndex) {

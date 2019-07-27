@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:puzzle_game/battle/BoardDraggable.dart';
 import 'package:puzzle_game/battle/BoardItemWhileDragging.dart';
-import 'package:puzzle_game/bloc/grid_bloc.dart';
-import 'package:puzzle_game/bloc/grid_state.dart';
+import 'package:puzzle_game/bloc/grid/grid_bloc.dart';
+import 'package:puzzle_game/bloc/grid/grid_state.dart';
 
 /// This class sets up one field of the board of the game
 /// gridState and index are used to get the x/y coordinates of the field to set up

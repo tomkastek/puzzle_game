@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:puzzle_game/battle/BoardTarget.dart';
 import 'package:puzzle_game/battle/board_item.dart';
-import 'package:puzzle_game/bloc/grid_state.dart';
+import 'package:puzzle_game/bloc/grid/grid_state.dart';
 
 /// The item that shall be shown on a field while the user is moving a item on
 /// the board.
@@ -24,7 +24,7 @@ class BoardItemWhileDragging extends StatelessWidget {
     return state.draggedIndex != index
         ? BoardTarget(x: x, y: y, state: state, index: index)
         : BoardItem(
-            item: state.grid[x][y],
+            item: state.grid.itemFor(x, y),
             alpha: 50,
           );
   }
