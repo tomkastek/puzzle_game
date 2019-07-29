@@ -26,6 +26,8 @@ class GridBloc extends Bloc<GridEvent, GridState> {
       yield* _mapDragEndToState(event);
     } else if (event is GridDragHovered) {
       yield* _mapDragHoveredToState(event);
+    } else if (event is ResolvedGrid) {
+      yield* _mapResolveToState(event);
     } else {
       yield currentState;
     }
@@ -43,21 +45,6 @@ class GridBloc extends Bloc<GridEvent, GridState> {
         draggedIndex: began.index, movingStarted: false);
   }
 
-  Stream<GridState> _mapDragEndToState(GridDragEnd end) async* {
-    _movementTimer?.cancel();
-    if (currentState is Dragging) {
-      if ((currentState as Dragging).movingStarted) {
-        yield Resolving(currentState.grid, 0);
-        _resolvingTimer = Timer(Duration(milliseconds: 200), () {
-          ResolvedGrid(0);
-        });
-        return;
-      }
-    }
-    // Default is that nothing moved
-    yield Ready(currentState.grid);
-  }
-
   Stream<GridState> _mapDragHoveredToState(GridDragHovered event) async* {
     if (currentState is Dragging) {
       currentState.grid.changeCircles(
@@ -71,6 +58,36 @@ class GridBloc extends Bloc<GridEvent, GridState> {
         dispatch(GridDragEnd());
       });
     }
+  }
+
+  Stream<GridState> _mapDragEndToState(GridDragEnd end) async* {
+    _movementTimer?.cancel();
+    if (currentState is Dragging) {
+      if ((currentState as Dragging).movingStarted) {
+        currentState.grid.resolve(pointFromIndex(0));
+        yield Resolving(currentState.grid, 0);
+        _resolvingTimer = Timer(Duration(milliseconds: 200), () {
+          dispatch(ResolvedGrid(0));
+        });
+        return;
+      }
+    }
+    // Default is that nothing moved
+    yield Ready(currentState.grid);
+  }
+
+  Stream<GridState> _mapResolveToState(ResolvedGrid event) async* {
+    var indexToCheck = event.checkedIndex + 1;
+    if (indexToCheck >= width * height) {
+      yield Ready(currentState.grid);
+      return;
+    }
+    currentState.grid.resolve(pointFromIndex(indexToCheck));
+    yield Resolving(currentState.grid, indexToCheck);
+    // TODO: Do not always activate timer
+    _resolvingTimer = Timer(Duration(milliseconds: 200), () {
+      dispatch(ResolvedGrid(indexToCheck));
+    });
   }
 
   // MARK: Starting helper functions here

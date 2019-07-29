@@ -69,7 +69,7 @@ class BoardDraggableFeedback extends StatelessWidget {
     final gridBloc = BlocProvider.of<GridBloc>(superContext);
 
     return BlocBuilder(
-      bloc: gridBloc,
+      bloc: gridBloc, // Can't read bloc from context
       builder: (context, GridState state) {
         // TODO: Create a global touch point state to show transform feedback into board
         return (state is Ready || state is Resolving)

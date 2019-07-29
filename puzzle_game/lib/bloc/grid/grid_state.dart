@@ -23,8 +23,9 @@ class Dragging extends GridState {
 }
 
 class Resolving extends GridState {
-  final int lastCheckedIndex;
+  final int lastChecked;
 
-  Resolving(BoardGrid grid, this.lastCheckedIndex)
-      : super(grid, props: [lastCheckedIndex]);
+  Resolving(BoardGrid grid, this.lastChecked)
+      : assert(lastChecked != null),
+        super(grid, props: [grid, lastChecked]);
 }
