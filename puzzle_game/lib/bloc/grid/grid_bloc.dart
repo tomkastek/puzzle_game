@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'dart:math';
 
+import 'package:puzzle_game/model/battle/board_point.dart';
 import 'package:puzzle_game/bloc/grid/grid_event.dart';
 import 'package:puzzle_game/bloc/grid/grid_state.dart';
 import 'package:bloc/bloc.dart';
-import 'package:puzzle_game/model/board_grid.dart';
+import 'package:puzzle_game/model/battle/board_grid.dart';
 
 class GridBloc extends Bloc<GridEvent, GridState> {
   int height;
@@ -107,8 +107,8 @@ class GridBloc extends Bloc<GridEvent, GridState> {
     return numberOfRows() * numberOfColumns();
   }
 
-  Point<int> pointFromIndex(int index) {
-    return Point(xPos(index), yPos(index));
+  BoardPoint pointFromIndex(int index) {
+    return BoardPoint(xPos(index), yPos(index));
   }
 
   int xPos(int fromIndex) {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:puzzle_game/battle/CircleItem.dart';
+import 'package:puzzle_game/model/battle/CircleItem.dart';
 import 'package:puzzle_game/battle/board_item.dart';
 import 'package:puzzle_game/bloc/grid/grid_bloc.dart';
 import 'package:puzzle_game/bloc/grid/grid_event.dart';

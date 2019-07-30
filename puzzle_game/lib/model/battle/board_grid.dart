@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:equatable/equatable.dart';
-import 'package:puzzle_game/battle/CircleItem.dart';
+import 'package:flutter/material.dart';
+import 'package:puzzle_game/model/battle/CircleItem.dart';
+import 'package:puzzle_game/model/battle/board_point.dart';
 
 class BoardGrid extends Equatable {
   final int height;
@@ -33,12 +35,12 @@ class BoardGrid extends Equatable {
     return grid[x][y];
   }
 
-  void changeCircles(Point<int> first, Point<int> second) {
+  void changeCircles(BoardPoint first, BoardPoint second) {
     var circleVariant = grid[first.x][first.y];
-    if (_areNeighbours(first.x, first.y, second.x, second.y)) {
+    if (first.isNeighbour(second)) {
       grid[first.x][first.y] = grid[second.x][second.y];
       grid[second.x][second.y] = circleVariant;
-    } else if (_areSecondNeighbours(first.x, first.y, second.x, second.y)) {
+    } else if (first.isSecondNeighbour(second)) {
       var xBetween = (first.x + second.x) ~/ 2;
       var yBetween = (first.y + second.y) ~/ 2;
       grid[first.x][first.y] = grid[xBetween][yBetween];
@@ -54,7 +56,7 @@ class BoardGrid extends Equatable {
 
   // TODO: after horizontal, check vertical and so on for complete board
   // TODO: Reduce code duplication
-  bool resolve(Point<int> from) {
+  bool resolve(BoardPoint from) {
     var wasSolvable = false;
     var item = grid[from.x][from.y];
     if (item.variant == CircleVariant.solved) {
@@ -81,58 +83,30 @@ class BoardGrid extends Equatable {
     return wasSolvable;
   }
 
-  List<Point<int>> _isHorizontalResolvable(Point<int> from, CircleItem item) {
-    var sameOnLeft = _sameItemsOnHorizontal(false, from, item, []);
-    var sameOnRight = _sameItemsOnHorizontal(true, from, item, []);
+  List<BoardPoint> _isHorizontalResolvable(BoardPoint from, CircleItem item) {
+    var sameOnLeft = _sameItemsOn(AxisDirection.left, from, item, []);
+    var sameOnRight = _sameItemsOn(AxisDirection.right, from, item, []);
     return sameOnRight..addAll(sameOnLeft);
   }
 
-  List<Point<int>> _isVerticalResolvable(Point<int> from, CircleItem item) {
-    var sameOnTop = _sameItemsOnVertical(true, from, item, []);
-    var sameOnBottom = _sameItemsOnVertical(false, from, item, []);
+  List<BoardPoint> _isVerticalResolvable(BoardPoint from, CircleItem item) {
+    var sameOnTop = _sameItemsOn(AxisDirection.up, from, item, []);
+    var sameOnBottom = _sameItemsOn(AxisDirection.down, from, item, []);
     return sameOnTop..addAll(sameOnBottom);
   }
 
-  /// !right == left
-  List<Point<int>> _sameItemsOnHorizontal(
-      bool toRight, Point<int> from, CircleItem item, List<Point<int>> items) {
-    var newColumn = toRight ? from.y + 1 : from.y - 1;
-    if (newColumn >= 0 && newColumn < grid[0].length) {
-      var compareItem = grid[from.x][newColumn];
+  List<BoardPoint> _sameItemsOn(AxisDirection direction, BoardPoint from,
+      CircleItem item, List<BoardPoint> items) {
+    var nextPoint = from.nextPointFor(direction);
+    if (nextPoint.x >= 0 &&
+        nextPoint.x < grid.length &&
+        nextPoint.y >= 0 &&
+        nextPoint.y < grid[0].length) {
+      var compareItem = grid[nextPoint.x][nextPoint.y];
       if (item == compareItem) {
-        return _sameItemsOnHorizontal(toRight, Point(from.x, newColumn), item,
-            items..add(Point(from.x, newColumn)));
+        return _sameItemsOn(direction, nextPoint, item, items..add(nextPoint));
       }
     }
     return items;
-  }
-
-  /// !top == bottom
-  List<Point<int>> _sameItemsOnVertical(bool top,
-      Point<int> from, CircleItem item, List<Point<int>> items) {
-    var newRow = top ? from.x - 1 : from.x + 1;
-    if (newRow >= 0 && newRow < grid.length) {
-      var compareItem = grid[newRow][from.y];
-      if (item == compareItem) {
-        return _sameItemsOnVertical(top,
-            Point(newRow, from.y), item, items..add(Point(newRow, from.y)));
-      }
-    }
-    return items;
-  }
-
-  bool _areNeighbours(int x1, int y1, int x2, int y2) {
-    if ([-1, 0, 1].contains(x1 - x2) && [-1, 0, 1].contains(y1 - y2)) {
-      return true;
-    }
-    return false;
-  }
-
-  bool _areSecondNeighbours(int x1, int y1, int x2, int y2) {
-    if (([2, -2].contains(x1 - x2) && [-2, -1, 0, 1, 2].contains(y1 - y2)) ||
-        ([-2, -1, 0, 1, 2].contains(x1 - x2) && [-2, 2].contains(y1 - y2))) {
-      return true;
-    }
-    return false;
   }
 }

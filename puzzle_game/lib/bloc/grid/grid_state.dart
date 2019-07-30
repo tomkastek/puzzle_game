@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:puzzle_game/model/board_grid.dart';
+import 'package:puzzle_game/model/battle/board_grid.dart';
 
 @immutable
 abstract class GridState extends Equatable {
