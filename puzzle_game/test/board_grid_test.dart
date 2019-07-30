@@ -64,4 +64,20 @@ void main() {
 
     expect(boardGrid.grid, gridMocks.hFormationSolved());
   });
+
+  test("T-upsideDown get solved", () {
+    var boardGrid = BoardGrid.random(3, 3);
+    boardGrid.grid = gridMocks.tUpsideDown();
+    boardGrid.resolve(BoardPoint(0,0));
+
+    expect(boardGrid.grid, gridMocks.tUpsideDownSolved());
+  });
+
+  test("bigBlock get solved", () {
+    var boardGrid = BoardGrid.random(4, 4);
+    boardGrid.grid = gridMocks.bigBlock();
+    boardGrid.resolve(BoardPoint(0,0));
+
+    expect(boardGrid.grid, gridMocks.bigBlockSolved());
+  });
 }

@@ -54,45 +54,90 @@ class BoardGrid extends Equatable {
     }
   }
 
-  // TODO: after horizontal, check vertical and so on for complete board
-  // TODO: Reduce code duplication
+  /// Checks the neighbours of the given point. If the neighbours are the same
+  /// elements as the point they will be changed with solved items.
   bool resolve(BoardPoint from) {
-    var wasSolvable = false;
     var item = grid[from.x][from.y];
     if (item.variant == CircleVariant.solved) {
-      return wasSolvable;
+      return false;
     }
 
-    var horizontalSolvable = _isHorizontalResolvable(from, item);
-    if (horizontalSolvable.length > 1) {
-      wasSolvable = true;
-      horizontalSolvable.add(from);
-      for (var item in horizontalSolvable) {
-        grid[item.x][item.y] = CircleItem(CircleVariant.solved);
-      }
+    var horizontalSolvable = _isHorizontalResolvable(from, item, [from]);
+    for (var item in horizontalSolvable) {
+      grid[item.x][item.y] = CircleItem(CircleVariant.solved);
     }
 
-    var verticalSolvable = _isVerticalResolvable(from, item);
-    if (verticalSolvable.length > 1) {
-      wasSolvable = true;
-      verticalSolvable.add(from);
-      for (var item in verticalSolvable) {
-        grid[item.x][item.y] = CircleItem(CircleVariant.solved);
-      }
+    var verticalSolvable = _isVerticalResolvable(from, item, [from]);
+    for (var item in verticalSolvable) {
+      grid[item.x][item.y] = CircleItem(CircleVariant.solved);
     }
-    return wasSolvable;
+
+    if (verticalSolvable.length > 1 || horizontalSolvable.length > 1) {
+      grid[from.x][from.y] = CircleItem(CircleVariant.solved);
+      return true;
+    }
+
+    return false;
   }
 
-  List<BoardPoint> _isHorizontalResolvable(BoardPoint from, CircleItem item) {
+  /// Checks for horizontal items. If they are the same as the given item and
+  /// more than two, the same items will be returned as list.
+  /// Also it will recursive look for all same points if in the vertical
+  /// direction they have also the same neighbours
+  List<BoardPoint> _isHorizontalResolvable(
+      BoardPoint from, CircleItem item, List<BoardPoint> alreadySolved) {
+    List<BoardPoint> horizantalSames = _sameOnHorizontal(from, item);
+    return _resolveFoundInOtherDirection(
+        Axis.vertical, horizantalSames, alreadySolved);
+  }
+
+  /// Checks for vertical items. If they are the same as the given item and
+  /// more than two, the same items will be returned as list.
+  /// Also it will recursive look for all same points if in the horizontal
+  /// direction they have also the same neighbours
+  List<BoardPoint> _isVerticalResolvable(
+      BoardPoint from, CircleItem item, List<BoardPoint> alreadySolved) {
+    List<BoardPoint> verticalSames = _sameOnVertical(from, item);
+    return _resolveFoundInOtherDirection(
+        Axis.horizontal, verticalSames, alreadySolved);
+  }
+
+  /// For all given points this method will check the next direction if it will
+  /// find a row of three or longer as well.
+  List<BoardPoint> _resolveFoundInOtherDirection(Axis next,
+      List<BoardPoint> itemsToCheck, List<BoardPoint> alreadySolved) {
+    if (itemsToCheck.length > 1) {
+      List<BoardPoint> newOnes = [];
+      for (var solvedPoint in itemsToCheck) {
+        if (!alreadySolved.contains(solvedPoint)) {
+          var solvedItem = grid[solvedPoint.x][solvedPoint.y];
+          var horizontalResolvables = next == Axis.horizontal
+              ? _isHorizontalResolvable(solvedPoint, solvedItem,
+                  []..addAll(alreadySolved)..addAll(itemsToCheck))
+              : _isVerticalResolvable(solvedPoint, solvedItem,
+                  []..addAll(alreadySolved)..addAll(itemsToCheck));
+          if (horizontalResolvables.length > 1) {
+            newOnes..addAll(horizontalResolvables);
+          }
+        }
+      }
+      itemsToCheck..addAll(newOnes);
+      return itemsToCheck;
+    }
+    return [];
+  }
+
+  List<BoardPoint> _sameOnHorizontal(BoardPoint from, CircleItem item) {
     var sameOnLeft = _sameItemsOn(AxisDirection.left, from, item, []);
     var sameOnRight = _sameItemsOn(AxisDirection.right, from, item, []);
     return sameOnRight..addAll(sameOnLeft);
   }
 
-  List<BoardPoint> _isVerticalResolvable(BoardPoint from, CircleItem item) {
+  List<BoardPoint> _sameOnVertical(BoardPoint from, CircleItem item) {
     var sameOnTop = _sameItemsOn(AxisDirection.up, from, item, []);
     var sameOnBottom = _sameItemsOn(AxisDirection.down, from, item, []);
-    return sameOnTop..addAll(sameOnBottom);
+    var all = sameOnTop..addAll(sameOnBottom);
+    return all;
   }
 
   List<BoardPoint> _sameItemsOn(AxisDirection direction, BoardPoint from,

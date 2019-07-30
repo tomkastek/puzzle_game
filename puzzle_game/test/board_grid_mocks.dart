@@ -119,4 +119,38 @@ class GridMocks {
       [CircleItem(CircleVariant.solved), CircleItem(CircleVariant.blue), CircleItem(CircleVariant.solved)]
     ];
   }
+
+  List<List<CircleItem>> tUpsideDown() {
+    return [
+      [CircleItem(CircleVariant.dark), CircleItem(CircleVariant.dark), CircleItem(CircleVariant.dark)],
+      [CircleItem(CircleVariant.blue), CircleItem(CircleVariant.dark), CircleItem(CircleVariant.blue)],
+      [CircleItem(CircleVariant.dark), CircleItem(CircleVariant.dark), CircleItem(CircleVariant.dark)]
+    ];
+  }
+
+  List<List<CircleItem>> tUpsideDownSolved() {
+    return [
+      [CircleItem(CircleVariant.solved), CircleItem(CircleVariant.solved), CircleItem(CircleVariant.solved)],
+      [CircleItem(CircleVariant.blue), CircleItem(CircleVariant.solved), CircleItem(CircleVariant.blue)],
+      [CircleItem(CircleVariant.solved), CircleItem(CircleVariant.solved), CircleItem(CircleVariant.solved)]
+    ];
+  }
+
+  List<List<CircleItem>> bigBlock() {
+    return [
+      [CircleItem(CircleVariant.dark), CircleItem(CircleVariant.dark), CircleItem(CircleVariant.dark), CircleItem(CircleVariant.dark)],
+      [CircleItem(CircleVariant.dark), CircleItem(CircleVariant.dark), CircleItem(CircleVariant.dark), CircleItem(CircleVariant.dark)],
+      [CircleItem(CircleVariant.dark), CircleItem(CircleVariant.dark), CircleItem(CircleVariant.dark), CircleItem(CircleVariant.dark)],
+      [CircleItem(CircleVariant.dark), CircleItem(CircleVariant.dark), CircleItem(CircleVariant.dark), CircleItem(CircleVariant.dark)]
+    ];
+  }
+
+  List<List<CircleItem>> bigBlockSolved() {
+    return [
+      [CircleItem(CircleVariant.solved), CircleItem(CircleVariant.solved), CircleItem(CircleVariant.solved), CircleItem(CircleVariant.solved)],
+      [CircleItem(CircleVariant.solved), CircleItem(CircleVariant.solved), CircleItem(CircleVariant.solved), CircleItem(CircleVariant.solved)],
+      [CircleItem(CircleVariant.solved), CircleItem(CircleVariant.solved), CircleItem(CircleVariant.solved), CircleItem(CircleVariant.solved)],
+      [CircleItem(CircleVariant.solved), CircleItem(CircleVariant.solved), CircleItem(CircleVariant.solved), CircleItem(CircleVariant.solved)]
+    ];
+  }
 }
