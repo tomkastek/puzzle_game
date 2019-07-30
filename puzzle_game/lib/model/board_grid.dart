@@ -8,7 +8,8 @@ class BoardGrid extends Equatable {
   final int width;
   List<List<CircleItem>> grid;
 
-  BoardGrid.random(this.height, this.width, {List props = const []}) : super([height, width]..addAll(props)) {
+  BoardGrid.random(this.height, this.width, {List props = const []})
+      : super([height, width]..addAll(props)) {
     this.grid = _randomGrid();
     super.props.add(grid);
   }
@@ -53,14 +54,16 @@ class BoardGrid extends Equatable {
 
   // TODO: after horizontal, check vertical and so on for complete board
   // TODO: Reduce code duplication
-  void resolve(Point<int> from) {
+  bool resolve(Point<int> from) {
+    var wasSolvable = false;
     var item = grid[from.x][from.y];
     if (item.variant == CircleVariant.solved) {
-      return;
+      return wasSolvable;
     }
-    
+
     var horizontalSolvable = _isHorizontalResolvable(from, item);
     if (horizontalSolvable.length > 1) {
+      wasSolvable = true;
       horizontalSolvable.add(from);
       for (var item in horizontalSolvable) {
         grid[item.x][item.y] = CircleItem(CircleVariant.solved);
@@ -69,71 +72,49 @@ class BoardGrid extends Equatable {
 
     var verticalSolvable = _isVerticalResolvable(from, item);
     if (verticalSolvable.length > 1) {
+      wasSolvable = true;
       verticalSolvable.add(from);
       for (var item in verticalSolvable) {
         grid[item.x][item.y] = CircleItem(CircleVariant.solved);
       }
     }
+    return wasSolvable;
   }
 
   List<Point<int>> _isHorizontalResolvable(Point<int> from, CircleItem item) {
-    var sameOnLeft = _sameItemsOnLeft(from, item, []);
-    var sameOnRight = _sameItemsOnRight(from, item, []);
+    var sameOnLeft = _sameItemsOnHorizontal(false, from, item, []);
+    var sameOnRight = _sameItemsOnHorizontal(true, from, item, []);
     return sameOnRight..addAll(sameOnLeft);
   }
 
   List<Point<int>> _isVerticalResolvable(Point<int> from, CircleItem item) {
-    var sameOnTop = _sameItemsOnTop(from, item, []);
-    var sameOnBottom = _sameItemsOnBottom(from, item, []);
+    var sameOnTop = _sameItemsOnVertical(true, from, item, []);
+    var sameOnBottom = _sameItemsOnVertical(false, from, item, []);
     return sameOnTop..addAll(sameOnBottom);
   }
 
-  List<Point<int>> _sameItemsOnLeft(
-      Point<int> from, CircleItem item, List<Point<int>> items) {
-    var newColumn = from.y - 1;
-    if (newColumn >= 0) {
+  /// !right == left
+  List<Point<int>> _sameItemsOnHorizontal(
+      bool toRight, Point<int> from, CircleItem item, List<Point<int>> items) {
+    var newColumn = toRight ? from.y + 1 : from.y - 1;
+    if (newColumn >= 0 && newColumn < grid[0].length) {
       var compareItem = grid[from.x][newColumn];
       if (item == compareItem) {
-        return _sameItemsOnLeft(
-            Point(from.x, newColumn), item, items..add(Point(from.x, newColumn)));
+        return _sameItemsOnHorizontal(toRight, Point(from.x, newColumn), item,
+            items..add(Point(from.x, newColumn)));
       }
     }
     return items;
   }
 
-  List<Point<int>> _sameItemsOnRight(
+  /// !top == bottom
+  List<Point<int>> _sameItemsOnVertical(bool top,
       Point<int> from, CircleItem item, List<Point<int>> items) {
-    var newColumn = from.y + 1;
-    if (newColumn < grid[0].length) {
-      var compareItem = grid[from.x][newColumn];
-      if (item == compareItem) {
-        return _sameItemsOnRight(
-            Point(from.x, newColumn), item, items..add(Point(from.x, newColumn)));
-      }
-    }
-    return items;
-  }
-
-  List<Point<int>> _sameItemsOnTop(
-      Point<int> from, CircleItem item, List<Point<int>> items) {
-    var newRow = from.x - 1;
-    if (newRow >= 0) {
+    var newRow = top ? from.x - 1 : from.x + 1;
+    if (newRow >= 0 && newRow < grid.length) {
       var compareItem = grid[newRow][from.y];
       if (item == compareItem) {
-        return _sameItemsOnTop(
-            Point(newRow, from.y), item, items..add(Point(newRow, from.y)));
-      }
-    }
-    return items;
-  }
-
-  List<Point<int>> _sameItemsOnBottom(
-      Point<int> from, CircleItem item, List<Point<int>> items) {
-    var newRow = from.x + 1;
-    if (newRow < grid.length) {
-      var compareItem = grid[newRow][from.y];
-      if (item == compareItem) {
-        return _sameItemsOnBottom(
+        return _sameItemsOnVertical(top,
             Point(newRow, from.y), item, items..add(Point(newRow, from.y)));
       }
     }

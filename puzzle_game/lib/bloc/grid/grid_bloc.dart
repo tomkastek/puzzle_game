@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:puzzle_game/battle/CircleItem.dart';
 import 'package:puzzle_game/bloc/grid/grid_event.dart';
 import 'package:puzzle_game/bloc/grid/grid_state.dart';
 import 'package:bloc/bloc.dart';
@@ -12,6 +11,8 @@ class GridBloc extends Bloc<GridEvent, GridState> {
   int width;
   Timer _movementTimer;
   Timer _resolvingTimer;
+
+  static const int hideResolvedMilliseconds = 500;
 
   GridBloc({this.height = 5, this.width = 6});
 
@@ -82,12 +83,15 @@ class GridBloc extends Bloc<GridEvent, GridState> {
       yield Ready(currentState.grid);
       return;
     }
-    currentState.grid.resolve(pointFromIndex(indexToCheck));
+    var solvable = currentState.grid.resolve(pointFromIndex(indexToCheck));
     yield Resolving(currentState.grid, indexToCheck);
-    // TODO: Do not always activate timer
-    _resolvingTimer = Timer(Duration(milliseconds: 200), () {
+    if (solvable) {
+      _resolvingTimer = Timer(Duration(milliseconds: hideResolvedMilliseconds), () {
+        dispatch(ResolvedGrid(indexToCheck));
+      });
+    } else {
       dispatch(ResolvedGrid(indexToCheck));
-    });
+    }
   }
 
   // MARK: Starting helper functions here
