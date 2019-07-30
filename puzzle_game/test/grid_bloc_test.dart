@@ -22,16 +22,5 @@ void main() {
     test('initial height is 5', () {
       expect(gridBloc.initialState.grid.height, 5);
     });
-
-    test('drag changes state to Dragging', () {
-      final List<Type> expected = [Ready, Dragging];
-
-      expectLater(
-        gridBloc.state.runtimeType,
-        emitsInOrder(expected),
-      );
-
-      gridBloc.dispatch(GridDragBegan(0));
-    });
   });
 }
