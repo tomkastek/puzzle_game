@@ -153,4 +153,56 @@ class GridMocks {
       [CircleItem(CircleVariant.solved), CircleItem(CircleVariant.solved), CircleItem(CircleVariant.solved), CircleItem(CircleVariant.solved)]
     ];
   }
+
+  List<List<CircleItem>> twoTouchingRows() {
+    return [
+      [CircleItem(CircleVariant.red), CircleItem(CircleVariant.green), CircleItem(CircleVariant.green), CircleItem(CircleVariant.green)],
+      [CircleItem(CircleVariant.green), CircleItem(CircleVariant.green), CircleItem(CircleVariant.green), CircleItem(CircleVariant.red)]
+    ];
+  }
+
+  List<List<CircleItem>> twoTouchingRowsSolved() {
+    return [
+      [CircleItem(CircleVariant.red), CircleItem(CircleVariant.solved), CircleItem(CircleVariant.solved), CircleItem(CircleVariant.solved)],
+      [CircleItem(CircleVariant.solved), CircleItem(CircleVariant.solved), CircleItem(CircleVariant.solved), CircleItem(CircleVariant.red)]
+    ];
+  }
+
+  List<List<CircleItem>> threeTouchingRows() {
+    return [
+      [CircleItem(CircleVariant.red), CircleItem(CircleVariant.blue), CircleItem(CircleVariant.light), CircleItem(CircleVariant.green), CircleItem(CircleVariant.green), CircleItem(CircleVariant.green)],
+      [CircleItem(CircleVariant.red), CircleItem(CircleVariant.green), CircleItem(CircleVariant.green), CircleItem(CircleVariant.green), CircleItem(CircleVariant.red), CircleItem(CircleVariant.light)],
+      [CircleItem(CircleVariant.green), CircleItem(CircleVariant.green), CircleItem(CircleVariant.green), CircleItem(CircleVariant.red), CircleItem(CircleVariant.blue), CircleItem(CircleVariant.dark)]
+    ];
+  }
+
+  List<List<CircleItem>> threeTouchingRowsSolved() {
+    return [
+      [CircleItem(CircleVariant.red), CircleItem(CircleVariant.blue), CircleItem(CircleVariant.light), CircleItem(CircleVariant.solved), CircleItem(CircleVariant.solved), CircleItem(CircleVariant.solved)],
+      [CircleItem(CircleVariant.red), CircleItem(CircleVariant.solved), CircleItem(CircleVariant.solved), CircleItem(CircleVariant.solved), CircleItem(CircleVariant.red), CircleItem(CircleVariant.light)],
+      [CircleItem(CircleVariant.solved), CircleItem(CircleVariant.solved), CircleItem(CircleVariant.solved), CircleItem(CircleVariant.red), CircleItem(CircleVariant.blue), CircleItem(CircleVariant.dark)]
+    ];
+  }
+
+  List<List<CircleItem>> threeTouchingColumns() {
+    return [
+      [CircleItem(CircleVariant.green), CircleItem(CircleVariant.blue), CircleItem(CircleVariant.light)],
+      [CircleItem(CircleVariant.green), CircleItem(CircleVariant.green), CircleItem(CircleVariant.red)],
+      [CircleItem(CircleVariant.green), CircleItem(CircleVariant.green), CircleItem(CircleVariant.red)],
+      [CircleItem(CircleVariant.red), CircleItem(CircleVariant.green), CircleItem(CircleVariant.green)],
+      [CircleItem(CircleVariant.red), CircleItem(CircleVariant.red), CircleItem(CircleVariant.green)],
+      [CircleItem(CircleVariant.blue), CircleItem(CircleVariant.light), CircleItem(CircleVariant.green)]
+    ];
+  }
+
+  List<List<CircleItem>> threeTouchingColumnsSolved() {
+    return [
+      [CircleItem(CircleVariant.solved), CircleItem(CircleVariant.blue), CircleItem(CircleVariant.light)],
+      [CircleItem(CircleVariant.solved), CircleItem(CircleVariant.solved), CircleItem(CircleVariant.red)],
+      [CircleItem(CircleVariant.solved), CircleItem(CircleVariant.solved), CircleItem(CircleVariant.red)],
+      [CircleItem(CircleVariant.red), CircleItem(CircleVariant.solved), CircleItem(CircleVariant.solved)],
+      [CircleItem(CircleVariant.red), CircleItem(CircleVariant.red), CircleItem(CircleVariant.solved)],
+      [CircleItem(CircleVariant.blue), CircleItem(CircleVariant.light), CircleItem(CircleVariant.solved)]
+    ];
+  }
 }

@@ -111,18 +111,60 @@ class BoardGrid extends Equatable {
       for (var solvedPoint in itemsToCheck) {
         if (!alreadySolved.contains(solvedPoint)) {
           var solvedItem = grid[solvedPoint.x][solvedPoint.y];
-          var horizontalResolvables = next == Axis.horizontal
-              ? _isHorizontalResolvable(solvedPoint, solvedItem,
-                  []..addAll(alreadySolved)..addAll(itemsToCheck))
-              : _isVerticalResolvable(solvedPoint, solvedItem,
-                  []..addAll(alreadySolved)..addAll(itemsToCheck));
-          if (horizontalResolvables.length > 1) {
-            newOnes..addAll(horizontalResolvables);
+
+          // Check for each new point the other axis to find crosses for example
+          List<BoardPoint> resolveables = resolveInDirection(
+              next, solvedPoint, solvedItem, alreadySolved, itemsToCheck);
+          if (resolveables.length > 1) {
+            newOnes..addAll(resolveables);
+          } else {
+            var sameDirectionSolvedNeighbours = solveNeighbourInSameDirection(
+                next,
+                solvedPoint,
+                solvedItem,
+                []..addAll(alreadySolved)..addAll(itemsToCheck));
+            newOnes..addAll(sameDirectionSolvedNeighbours);
           }
         }
       }
       itemsToCheck..addAll(newOnes);
       return itemsToCheck;
+    }
+    return [];
+  }
+
+  List<BoardPoint> resolveInDirection(
+      Axis next,
+      BoardPoint solvedPoint,
+      CircleItem solvedItem,
+      List<BoardPoint> alreadySolved,
+      List<BoardPoint> itemsToCheck) {
+    var resolveables = next == Axis.horizontal
+        ? _isHorizontalResolvable(solvedPoint, solvedItem,
+            []..addAll(alreadySolved)..addAll(itemsToCheck))
+        : _isVerticalResolvable(solvedPoint, solvedItem,
+            []..addAll(alreadySolved)..addAll(itemsToCheck));
+    return resolveables;
+  }
+
+  /// If no cross = check if same single neighbour is resolvable in
+  /// same Axis. Example:
+  /// OXXX
+  /// XXXO
+  List<BoardPoint> solveNeighbourInSameDirection(Axis next, BoardPoint from,
+      CircleItem item, List<BoardPoint> alreadySolved) {
+    var sameNeighbour = next == Axis.horizontal
+        ? _sameOnHorizontal(from, item)
+        : _sameOnVertical(from, item);
+
+    if (sameNeighbour.length == 1) {
+      var toCheck = sameNeighbour.first;
+      var axisResolveables = next == Axis.horizontal
+          ? _isVerticalResolvable(toCheck, item, alreadySolved)
+          : _isHorizontalResolvable(toCheck, item, alreadySolved);
+      if (axisResolveables.length > 1) {
+        return axisResolveables..add(toCheck);
+      }
     }
     return [];
   }

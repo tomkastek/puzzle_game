@@ -80,4 +80,28 @@ void main() {
 
     expect(boardGrid.grid, gridMocks.bigBlockSolved());
   });
+
+  test("touching two rows get solved", () {
+    var boardGrid = BoardGrid.random(2, 4);
+    boardGrid.grid = gridMocks.twoTouchingRows();
+    boardGrid.resolve(BoardPoint(1,0));
+
+    expect(boardGrid.grid, gridMocks.twoTouchingRowsSolved());
+  });
+
+  test("touching rows get solved", () {
+    var boardGrid = BoardGrid.random(3, 6);
+    boardGrid.grid = gridMocks.threeTouchingRows();
+    boardGrid.resolve(BoardPoint(2,0));
+
+    expect(boardGrid.grid, gridMocks.threeTouchingRowsSolved());
+  });
+
+  test("touching columns get solved", () {
+    var boardGrid = BoardGrid.random(6, 3);
+    boardGrid.grid = gridMocks.threeTouchingColumns();
+    boardGrid.resolve(BoardPoint(0,0));
+
+    expect(boardGrid.grid, gridMocks.threeTouchingColumnsSolved());
+  });
 }
