@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:puzzle_game/battle/board_item.dart';
-import 'package:puzzle_game/bloc/grid_bloc.dart';
-import 'package:puzzle_game/bloc/grid_event.dart';
-import 'package:puzzle_game/bloc/grid_state.dart';
+import 'package:puzzle_game/bloc/grid/grid_bloc.dart';
+import 'package:puzzle_game/bloc/grid/grid_event.dart';
+import 'package:puzzle_game/bloc/grid/grid_state.dart';
 
 /// This widget is used on the board for 'Dragging' state.
 /// If a item in the board is a target the dragged item can be hovered over it
@@ -28,7 +28,7 @@ class BoardTarget extends StatelessWidget {
     return DragTarget(
       builder: (context, candidateData, rejectedData) {
         return BoardItem(
-          item: state.grid[x][y],
+          item: state.grid.itemFor(x, y),
         );
       },
       onWillAccept: (int) {

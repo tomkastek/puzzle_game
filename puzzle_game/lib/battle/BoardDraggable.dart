@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:puzzle_game/battle/CircleItem.dart';
+import 'package:puzzle_game/model/battle/CircleItem.dart';
 import 'package:puzzle_game/battle/board_item.dart';
-import 'package:puzzle_game/bloc/grid_bloc.dart';
-import 'package:puzzle_game/bloc/grid_event.dart';
-import 'package:puzzle_game/bloc/grid_state.dart';
+import 'package:puzzle_game/bloc/grid/grid_bloc.dart';
+import 'package:puzzle_game/bloc/grid/grid_event.dart';
+import 'package:puzzle_game/bloc/grid/grid_state.dart';
 
 /// This widget is a object on the board in 'Ready' state.
 /// Every field represented by this widget is a possible start point for user
@@ -30,7 +30,7 @@ class BoardDraggable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final gridBloc = BlocProvider.of<GridBloc>(context);
-    var item = state.grid[x][y];
+    var item = state.grid.itemFor(x, y);
 
     return Draggable<int>(
       child: BoardItem(
@@ -69,12 +69,11 @@ class BoardDraggableFeedback extends StatelessWidget {
     final gridBloc = BlocProvider.of<GridBloc>(superContext);
 
     return BlocBuilder(
-      bloc: gridBloc,
+      bloc: gridBloc, // Can't read bloc from context
       builder: (context, GridState state) {
         // TODO: Create a global touch point state to show transform feedback into board
-        return (state is Ready)
-            ? Container()
-            : Container(
+        return (state is Dragging)
+            ? Container(
                 height: height,
                 width: width,
                 transform:
@@ -82,7 +81,8 @@ class BoardDraggableFeedback extends StatelessWidget {
                 child: BoardItem(
                   item: item,
                 ),
-              );
+              )
+            : Container();
       },
     );
   }

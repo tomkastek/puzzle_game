@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:puzzle_game/battle/board_field.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:puzzle_game/bloc/grid_bloc.dart';
+import 'package:puzzle_game/bloc/grid/grid_bloc.dart';
 
 /// Class to define one puzzle board of the game.
 /// Defines the grid (Content of field, number of fileds, size of fields)
