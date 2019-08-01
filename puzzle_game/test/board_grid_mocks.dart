@@ -205,4 +205,116 @@ class GridMocks {
       [CircleItem(CircleVariant.blue), CircleItem(CircleVariant.light), CircleItem(CircleVariant.solved)]
     ];
   }
+
+  List<List<CircleItem>> twoBottomSolved() {
+    return [
+      [
+        CircleItem(CircleVariant.red)
+      ],
+      [
+        CircleItem(CircleVariant.solved)
+      ]
+    ];
+  }
+
+  List<List<CircleItem>> twoBottomSolvedCorrectPlaced() {
+    return [
+      [
+        CircleItem(CircleVariant.solved)
+      ],
+      [
+        CircleItem(CircleVariant.red)
+      ]
+    ];
+  }
+
+  List<List<CircleItem>> threeBottomSolved() {
+    return [
+      [
+        CircleItem(CircleVariant.blue)
+      ],
+      [
+        CircleItem(CircleVariant.red)
+      ],
+      [
+        CircleItem(CircleVariant.solved)
+      ]
+    ];
+  }
+
+  List<List<CircleItem>> threeBottomSolvedCorrectPlaced() {
+    return [
+      [
+        CircleItem(CircleVariant.solved)
+      ],
+      [
+        CircleItem(CircleVariant.blue)
+      ],
+      [
+        CircleItem(CircleVariant.red)
+      ]
+    ];
+  }
+
+  List<List<CircleItem>> threeBetweenSolved() {
+    return [
+      [
+        CircleItem(CircleVariant.blue)
+      ],
+      [
+        CircleItem(CircleVariant.solved)
+      ],
+      [
+        CircleItem(CircleVariant.red)
+      ]
+    ];
+  }
+
+  List<List<CircleItem>> threeBetweenSolvedCorrectPlaced() {
+    return [
+      [
+        CircleItem(CircleVariant.solved)
+      ],
+      [
+        CircleItem(CircleVariant.blue)
+      ],
+      [
+        CircleItem(CircleVariant.red)
+      ]
+    ];
+  }
+
+  List<List<CircleItem>> fourTwoBetweenSolved() {
+    return [
+      [
+        CircleItem(CircleVariant.blue)
+      ],
+      [
+        CircleItem(CircleVariant.solved)
+      ],
+      [
+        CircleItem(CircleVariant.red)
+      ],
+      [
+        CircleItem(CircleVariant.solved)
+      ]
+    ];
+  }
+
+  List<List<CircleItem>> fourTwoBetweenSolvedCorrectPlaced() {
+    return [
+      [
+        CircleItem(CircleVariant.solved)
+      ],
+      [
+        CircleItem(CircleVariant.solved)
+      ],
+      [
+        CircleItem(CircleVariant.blue)
+      ],
+      [
+        CircleItem(CircleVariant.red)
+      ]
+    ];
+  }
 }

@@ -29,6 +29,10 @@ class GridBloc extends Bloc<GridEvent, GridState> {
       yield* _mapDragHoveredToState(event);
     } else if (event is ResolvedGrid) {
       yield* _mapResolveToState(event);
+    } else if (event is GridSolved) {
+      yield* _mapGridSolvedToState(event);
+    } else if (event is RefillGrid) {
+      yield* _mapRefillGridToState(event);
     } else {
       yield currentState;
     }
@@ -67,7 +71,7 @@ class GridBloc extends Bloc<GridEvent, GridState> {
       if ((currentState as Dragging).movingStarted) {
         currentState.grid.resolve(pointFromIndex(0));
         yield Resolving(currentState.grid, 0);
-        _resolvingTimer = Timer(Duration(milliseconds: 200), () {
+        _resolvingTimer = Timer(Duration(milliseconds: hideResolvedMilliseconds), () {
           dispatch(ResolvedGrid(0));
         });
         return;
@@ -80,7 +84,8 @@ class GridBloc extends Bloc<GridEvent, GridState> {
   Stream<GridState> _mapResolveToState(ResolvedGrid event) async* {
     var indexToCheck = event.checkedIndex + 1;
     if (indexToCheck >= width * height) {
-      yield Ready(currentState.grid);
+      yield Resolving(currentState.grid, indexToCheck);
+      dispatch(GridSolved());
       return;
     }
     var solvable = currentState.grid.resolve(pointFromIndex(indexToCheck));
@@ -92,6 +97,37 @@ class GridBloc extends Bloc<GridEvent, GridState> {
     } else {
       dispatch(ResolvedGrid(indexToCheck));
     }
+  }
+
+  Stream<GridState> _mapGridSolvedToState(GridSolved event) async* {
+    var correctionHappened = currentState.grid.correctItemPlacements();
+    if (correctionHappened) {
+      var fakeIndex = 0; // delete if grid is compareable. Until then we need a new index
+      if (currentState is Resolving) {
+        fakeIndex = (currentState as Resolving).lastChecked + 1;
+      }
+      yield Resolving(currentState.grid, fakeIndex);
+      _resolvingTimer = Timer(Duration(milliseconds: hideResolvedMilliseconds), () {
+        dispatch(RefillGrid());
+      });
+    } else {
+      // TODO: Why isn't this the last state after grid solving?
+      Ready(currentState.grid);
+    }
+
+  }
+
+  Stream<GridState> _mapRefillGridToState(RefillGrid event) async* {
+    var refilled = currentState.grid.refill();
+    yield Resolving(currentState.grid, -1);
+    if (refilled) {
+      _resolvingTimer = Timer(Duration(milliseconds: hideResolvedMilliseconds), () {
+        dispatch(ResolvedGrid(0));
+      });
+    } else {
+      dispatch(GridSolved());
+    }
+
   }
 
   // MARK: Starting helper functions here

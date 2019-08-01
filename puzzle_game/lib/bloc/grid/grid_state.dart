@@ -29,3 +29,7 @@ class Resolving extends GridState {
       : assert(lastChecked != null),
         super(grid, props: [grid, lastChecked]);
 }
+
+class WaitForFill extends GridState {
+  WaitForFill(BoardGrid grid) : super(grid);
+}

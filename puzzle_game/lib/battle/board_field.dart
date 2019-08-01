@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:puzzle_game/battle/BoardDraggable.dart';
 import 'package:puzzle_game/battle/BoardItemWhileDragging.dart';
+import 'package:puzzle_game/battle/board_item.dart';
 import 'package:puzzle_game/bloc/grid/grid_bloc.dart';
 import 'package:puzzle_game/bloc/grid/grid_state.dart';
 
@@ -30,19 +31,24 @@ class BoardField extends StatelessWidget {
       child: LayoutBuilder(builder: (context, constraints) {
         return BlocBuilder<GridBloc, GridState>(
           builder: (context, state) {
+            print(state.runtimeType);
             if (state is Dragging) {
               return BoardItemWhileDragging(
                   index: index, state: state, y: y, x: x);
             }
-            var feedbackHeight = constraints.biggest.height * 1.1;
-            var feedbackWidth = constraints.biggest.width * 1.1;
-            return BoardDraggable(
-                x: x,
-                y: y,
-                state: state,
-                index: index,
-                feedbackHeight: feedbackHeight,
-                feedbackWidth: feedbackWidth);
+            if (state is Ready) {
+              var feedbackHeight = constraints.biggest.height * 1.1;
+              var feedbackWidth = constraints.biggest.width * 1.1;
+              return BoardDraggable(
+                  x: x,
+                  y: y,
+                  state: state,
+                  index: index,
+                  feedbackHeight: feedbackHeight,
+                  feedbackWidth: feedbackWidth);
+            }
+            var item = state.grid.itemFor(x, y);
+            return BoardItem(item: item);
           },
         );
       }),

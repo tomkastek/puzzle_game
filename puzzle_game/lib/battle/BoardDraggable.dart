@@ -72,9 +72,8 @@ class BoardDraggableFeedback extends StatelessWidget {
       bloc: gridBloc, // Can't read bloc from context
       builder: (context, GridState state) {
         // TODO: Create a global touch point state to show transform feedback into board
-        return (state is Ready || state is Resolving)
-            ? Container()
-            : Container(
+        return (state is Dragging)
+            ? Container(
                 height: height,
                 width: width,
                 transform:
@@ -82,7 +81,8 @@ class BoardDraggableFeedback extends StatelessWidget {
                 child: BoardItem(
                   item: item,
                 ),
-              );
+              )
+            : Container();
       },
     );
   }

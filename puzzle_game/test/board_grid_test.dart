@@ -104,4 +104,36 @@ void main() {
 
     expect(boardGrid.grid, gridMocks.threeTouchingColumnsSolved());
   });
+
+  test("correctItemPlacements works for only two items (XO)", () {
+    var boardGrid = BoardGrid.random(2, 1);
+    boardGrid.grid = gridMocks.twoBottomSolved();
+    boardGrid.correctItemPlacements();
+
+    expect(boardGrid.grid, gridMocks.twoBottomSolvedCorrectPlaced());
+  });
+
+  test("correctItemPlacements works for three bottom solved (XXO)", () {
+    var boardGrid = BoardGrid.random(3, 1);
+    boardGrid.grid = gridMocks.threeBottomSolved();
+    boardGrid.correctItemPlacements();
+
+    expect(boardGrid.grid, gridMocks.threeBottomSolvedCorrectPlaced());
+  });
+
+  test("correctItemPlacements works for three bottom solved (XXO)", () {
+    var boardGrid = BoardGrid.random(3, 1);
+    boardGrid.grid = gridMocks.threeBetweenSolved();
+    boardGrid.correctItemPlacements();
+
+    expect(boardGrid.grid, gridMocks.threeBetweenSolvedCorrectPlaced());
+  });
+
+  test("correctItemPlacements works for four with two solved between (XOXO)", () {
+    var boardGrid = BoardGrid.random(4, 1);
+    boardGrid.grid = gridMocks.fourTwoBetweenSolved();
+    boardGrid.correctItemPlacements();
+
+    expect(boardGrid.grid, gridMocks.fourTwoBetweenSolvedCorrectPlaced());
+  });
 }

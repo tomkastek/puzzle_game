@@ -23,6 +23,7 @@ class BoardGrid extends Equatable {
     for (int h = 0; h < height; h++) {
       List<CircleItem> row = [];
       for (int w = 0; w < width; w++) {
+        // TODO: savety for enum sorting (I miss swift enum functionality...)
         var randomNumber = i.nextInt(5);
         row.add(CircleItem(CircleVariant.values[randomNumber]));
       }
@@ -62,29 +63,92 @@ class BoardGrid extends Equatable {
       return false;
     }
 
-    var horizontalSolvable = _isHorizontalResolvable(from, item, [from]);
+    var wasSolveable = _solveIfPossible(from, item);
+    if (wasSolveable) {
+      grid[from.x][from.y] = CircleItem(CircleVariant.solved);
+    }
+
+    return wasSolveable;
+  }
+
+  /// This function is used after a board is resolved.
+  /// The Items on top need to fall down
+  /// @return true if a correction happened
+  bool correctItemPlacements() {
+    var correctionHappened = false;
+    // bottom row is not needed to check
+    for (var x = height - 2; x >= 0; x--) {
+      for (var y = width -1; y >= 0; y--) {
+        if (grid[x][y].variant != CircleVariant.solved) {
+          var belowFree = _lastBelowSolvedPoint(BoardPoint(x, y));
+          if (belowFree.x != x) {
+            correctionHappened = true;
+            grid[belowFree.x][y] = grid[x][y];
+            grid[x][y] = CircleItem(CircleVariant.solved);
+          }
+        } else {
+          // Just to know that there even was a solved griditem
+          correctionHappened = true;
+        }
+      }
+    }
+    return correctionHappened;
+  }
+
+  /// fills al solved items with a new item
+  /// @return true if a field was refilled
+  bool refill() {
+    var refilled = false;
+    var i = Random();
+    for (var x = height - 1; x >= 0; x--) {
+      for (var y = width -1; y >= 0; y--) {
+        if (grid[x][y].variant == CircleVariant.solved) {
+          refilled = true;
+          // TODO: see randomGrid()
+          var randomNumber = i.nextInt(5);
+          grid[x][y] = CircleItem(CircleVariant.values[randomNumber]);
+        }
+      }
+    }
+    return refilled;
+  }
+
+  BoardPoint _lastBelowSolvedPoint(BoardPoint from) {
+    if (from.x < height - 1) {
+      var nextPoint = grid[from.x + 1][from.y];
+      if (nextPoint.variant == CircleVariant.solved) {
+        return _lastBelowSolvedPoint(BoardPoint(from.x + 1, from.y));
+      }
+    }
+    return from;
+  }
+
+  /// Solves the puzzle from a given point
+  /// If a row/column was found it returns true, false otherwise
+  bool _solveIfPossible(BoardPoint from, CircleItem item) {
+    var horizontalSolvable = _solveHorizontal(from, item, [from]);
+    _changeToSolvedItems(horizontalSolvable);
+
+    var verticalSolvable = _solveVertical(from, item, [from]);
+    _changeToSolvedItems(verticalSolvable);
+
+    if (verticalSolvable.length > 1 || horizontalSolvable.length > 1) {
+      return true;
+    }
+    return false;
+  }
+
+  void _changeToSolvedItems(List<BoardPoint> horizontalSolvable) {
     for (var item in horizontalSolvable) {
       grid[item.x][item.y] = CircleItem(CircleVariant.solved);
     }
-
-    var verticalSolvable = _isVerticalResolvable(from, item, [from]);
-    for (var item in verticalSolvable) {
-      grid[item.x][item.y] = CircleItem(CircleVariant.solved);
-    }
-
-    if (verticalSolvable.length > 1 || horizontalSolvable.length > 1) {
-      grid[from.x][from.y] = CircleItem(CircleVariant.solved);
-      return true;
-    }
-
-    return false;
   }
 
   /// Checks for horizontal items. If they are the same as the given item and
   /// more than two, the same items will be returned as list.
   /// Also it will recursive look for all same points if in the vertical
   /// direction they have also the same neighbours
-  List<BoardPoint> _isHorizontalResolvable(
+  List<BoardPoint> _solveHorizontal(
       BoardPoint from, CircleItem item, List<BoardPoint> alreadySolved) {
     List<BoardPoint> horizantalSames = _sameOnHorizontal(from, item);
     return _resolveFoundInOtherDirection(
@@ -95,7 +159,7 @@ class BoardGrid extends Equatable {
   /// more than two, the same items will be returned as list.
   /// Also it will recursive look for all same points if in the horizontal
   /// direction they have also the same neighbours
-  List<BoardPoint> _isVerticalResolvable(
+  List<BoardPoint> _solveVertical(
       BoardPoint from, CircleItem item, List<BoardPoint> alreadySolved) {
     List<BoardPoint> verticalSames = _sameOnVertical(from, item);
     return _resolveFoundInOtherDirection(
@@ -113,12 +177,12 @@ class BoardGrid extends Equatable {
           var solvedItem = grid[solvedPoint.x][solvedPoint.y];
 
           // Check for each new point the other axis to find crosses for example
-          List<BoardPoint> resolveables = resolveInDirection(
+          List<BoardPoint> resolveables = _resolveInDirection(
               next, solvedPoint, solvedItem, alreadySolved, itemsToCheck);
           if (resolveables.length > 1) {
             newOnes..addAll(resolveables);
           } else {
-            var sameDirectionSolvedNeighbours = solveNeighbourInSameDirection(
+            var sameDirectionSolvedNeighbours = _solveNeighbourInSameDirection(
                 next,
                 solvedPoint,
                 solvedItem,
@@ -133,16 +197,16 @@ class BoardGrid extends Equatable {
     return [];
   }
 
-  List<BoardPoint> resolveInDirection(
+  List<BoardPoint> _resolveInDirection(
       Axis next,
       BoardPoint solvedPoint,
       CircleItem solvedItem,
       List<BoardPoint> alreadySolved,
       List<BoardPoint> itemsToCheck) {
     var resolveables = next == Axis.horizontal
-        ? _isHorizontalResolvable(solvedPoint, solvedItem,
+        ? _solveHorizontal(solvedPoint, solvedItem,
             []..addAll(alreadySolved)..addAll(itemsToCheck))
-        : _isVerticalResolvable(solvedPoint, solvedItem,
+        : _solveVertical(solvedPoint, solvedItem,
             []..addAll(alreadySolved)..addAll(itemsToCheck));
     return resolveables;
   }
@@ -151,7 +215,7 @@ class BoardGrid extends Equatable {
   /// same Axis. Example:
   /// OXXX
   /// XXXO
-  List<BoardPoint> solveNeighbourInSameDirection(Axis next, BoardPoint from,
+  List<BoardPoint> _solveNeighbourInSameDirection(Axis next, BoardPoint from,
       CircleItem item, List<BoardPoint> alreadySolved) {
     var sameNeighbour = next == Axis.horizontal
         ? _sameOnHorizontal(from, item)
@@ -160,8 +224,8 @@ class BoardGrid extends Equatable {
     if (sameNeighbour.length == 1) {
       var toCheck = sameNeighbour.first;
       var axisResolveables = next == Axis.horizontal
-          ? _isVerticalResolvable(toCheck, item, alreadySolved)
-          : _isHorizontalResolvable(toCheck, item, alreadySolved);
+          ? _solveVertical(toCheck, item, alreadySolved)
+          : _solveHorizontal(toCheck, item, alreadySolved);
       if (axisResolveables.length > 1) {
         return axisResolveables..add(toCheck);
       }

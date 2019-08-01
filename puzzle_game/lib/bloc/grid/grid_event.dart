@@ -37,3 +37,17 @@ class ResolvedGrid extends GridEvent {
   @override
   String toString() => "resolved Grid with last checked position: { $checkedIndex }";
 }
+
+class GridSolved extends GridEvent {
+  GridSolved();
+
+  @override
+  String toString() => "Grid is finished with solving";
+}
+
+class RefillGrid extends GridEvent {
+  RefillGrid();
+
+  @override
+  String toString() => "Grid is should be refilled";
+}
