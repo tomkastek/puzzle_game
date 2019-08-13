@@ -49,5 +49,5 @@ class RefillGrid extends GridEvent {
   RefillGrid();
 
   @override
-  String toString() => "Grid is should be refilled";
+  String toString() => "Grid should be refilled";
 }
