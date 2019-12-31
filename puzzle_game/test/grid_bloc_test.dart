@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:puzzle_game/bloc/grid/grid_bloc.dart';
-import 'package:puzzle_game/bloc/grid/grid_event.dart';
 import 'package:puzzle_game/bloc/grid/grid_state.dart';
 
 void main() {
