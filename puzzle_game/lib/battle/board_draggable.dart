@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:puzzle_game/model/battle/CircleItem.dart';
+import 'package:puzzle_game/model/battle/circle_item.dart';
 import 'package:puzzle_game/battle/board_item.dart';
 import 'package:puzzle_game/bloc/grid/grid_bloc.dart';
 import 'package:puzzle_game/bloc/grid/grid_event.dart';
@@ -30,27 +30,26 @@ class BoardDraggable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final gridBloc = BlocProvider.of<GridBloc>(context);
-    var item = state.grid.itemFor(x, y);
+    final item = state.grid.itemFor(x, y);
 
     return Draggable<int>(
-      child: BoardItem(
-        item: item,
-      ),
-      feedback: BoardDraggableFeedback(
-        height: feedbackHeight,
-        width: feedbackWidth,
-        item: item,
-        superContext: context,
-      ),
-      dragAnchor: DragAnchor.pointer,
-      data: index,
-      onDragStarted: () {
-        gridBloc.dispatch(GridDragBegan(index));
-      },
-      onDraggableCanceled: (velocity, offset) {
-        gridBloc.dispatch(GridDragEnd());
-      },
-    );
+        feedback: BoardDraggableFeedback(
+          height: feedbackHeight,
+          width: feedbackWidth,
+          item: item,
+          superContext: context,
+        ),
+        dragAnchor: DragAnchor.pointer,
+        data: index,
+        onDragStarted: () {
+          gridBloc.dispatch(GridDragBegan(index));
+        },
+        onDraggableCanceled: (velocity, offset) {
+          gridBloc.dispatch(GridDragEnd());
+        },
+        child: BoardItem(
+          item: item,
+        ));
   }
 }
 

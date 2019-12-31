@@ -1,4 +1,4 @@
-import 'package:puzzle_game/model/battle/CircleItem.dart';
+import 'package:puzzle_game/model/battle/circle_item.dart';
 
 class GridMocks {
   List<List<CircleItem>> threeBlueRow() {

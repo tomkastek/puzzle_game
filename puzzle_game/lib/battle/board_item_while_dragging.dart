@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:puzzle_game/battle/BoardTarget.dart';
+import 'package:puzzle_game/battle/board_target.dart';
 import 'package:puzzle_game/battle/board_item.dart';
 import 'package:puzzle_game/bloc/grid/grid_state.dart';
 

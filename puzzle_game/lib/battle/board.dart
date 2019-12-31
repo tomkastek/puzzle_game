@@ -10,8 +10,8 @@ class Board extends StatelessWidget {
   Widget build(BuildContext context) {
     final GridBloc gridBloc = BlocProvider.of<GridBloc>(context);
 
-    var boardWidth = MediaQuery.of(context).size.width;
-    var boardHeight =
+    final boardWidth = MediaQuery.of(context).size.width;
+    final boardHeight =
         gridBloc.numberOfRows() / gridBloc.numberOfColumns() * boardWidth;
 
     return Column(children: <Widget>[
@@ -19,7 +19,7 @@ class Board extends StatelessWidget {
         height: boardHeight,
         width: boardWidth,
         child: GridView.count(
-          physics: NeverScrollableScrollPhysics(), // disable scrolling
+          physics: const NeverScrollableScrollPhysics(), // disable scrolling
           crossAxisCount: gridBloc.numberOfColumns(),
           children: boardGridFields(gridBloc),
         ),
@@ -29,8 +29,8 @@ class Board extends StatelessWidget {
 
   List<Widget> boardGridFields(GridBloc gridBloc) {
     return List.generate(gridBloc.numberOfItems(), (index) {
-      var x = gridBloc.xPos(index);
-      var y = gridBloc.yPos(index);
+      final x = gridBloc.xPos(index);
+      final y = gridBloc.yPos(index);
 
       return BoardField(index: index, x: x, y: y);
     });

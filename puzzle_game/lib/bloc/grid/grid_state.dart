@@ -6,7 +6,7 @@ import 'package:puzzle_game/model/battle/board_grid.dart';
 abstract class GridState extends Equatable {
   final BoardGrid grid;
 
-  GridState(this.grid, {List props = const []}) : super([grid]..addAll(props));
+  GridState(this.grid, {List props = const []}) : super([grid,...props]);
 }
 
 class Ready extends GridState {

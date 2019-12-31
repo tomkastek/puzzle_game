@@ -5,9 +5,9 @@ import 'package:puzzle_game/model/battle/board_point.dart';
 import 'board_grid_mocks.dart';
 
 void main() {
-  var gridMocks = GridMocks();
+  final gridMocks = GridMocks();
   test("Three in horizontal row get solved", () {
-    var boardGrid = BoardGrid.random(1, 3);
+    final boardGrid = BoardGrid.random(1, 3);
     boardGrid.grid = gridMocks.threeBlueRow();
     boardGrid.resolve(BoardPoint(0,0));
 
@@ -15,7 +15,7 @@ void main() {
   });
 
   test("Five in horizontal row get solved", () {
-    var boardGrid = BoardGrid.random(1, 5);
+    final boardGrid = BoardGrid.random(1, 5);
     boardGrid.grid = gridMocks.fiveBlueRow();
     boardGrid.resolve(BoardPoint(0,0));
 
@@ -23,7 +23,7 @@ void main() {
   });
 
   test("Three in column get solved", () {
-    var boardGrid = BoardGrid.random(3, 1);
+    final boardGrid = BoardGrid.random(3, 1);
     boardGrid.grid = gridMocks.threeBlueColumn();
     boardGrid.resolve(BoardPoint(0,0));
 
@@ -31,7 +31,7 @@ void main() {
   });
 
   test("Five in column get solved", () {
-    var boardGrid = BoardGrid.random(5, 1);
+    final boardGrid = BoardGrid.random(5, 1);
     boardGrid.grid = gridMocks.fiveBlueColumn();
     boardGrid.resolve(BoardPoint(0,0));
 
@@ -39,7 +39,7 @@ void main() {
   });
 
   test("Three in L get NOT solved", () {
-    var boardGrid = BoardGrid.random(2, 2);
+    final boardGrid = BoardGrid.random(2, 2);
     boardGrid.grid = gridMocks.threeInL();
     boardGrid.resolve(BoardPoint(0,0));
     boardGrid.resolve(BoardPoint(0,1));
@@ -50,7 +50,7 @@ void main() {
   });
 
   test("Cross get solved", () {
-    var boardGrid = BoardGrid.random(3, 3);
+    final boardGrid = BoardGrid.random(3, 3);
     boardGrid.grid = gridMocks.cross();
     boardGrid.resolve(BoardPoint(0,1));
 
@@ -58,7 +58,7 @@ void main() {
   });
 
   test("H-Formation get solved", () {
-    var boardGrid = BoardGrid.random(3, 3);
+    final boardGrid = BoardGrid.random(3, 3);
     boardGrid.grid = gridMocks.hFormation();
     boardGrid.resolve(BoardPoint(0,0));
 
@@ -66,7 +66,7 @@ void main() {
   });
 
   test("T-upsideDown get solved", () {
-    var boardGrid = BoardGrid.random(3, 3);
+    final boardGrid = BoardGrid.random(3, 3);
     boardGrid.grid = gridMocks.tUpsideDown();
     boardGrid.resolve(BoardPoint(0,0));
 
@@ -74,7 +74,7 @@ void main() {
   });
 
   test("bigBlock get solved", () {
-    var boardGrid = BoardGrid.random(4, 4);
+    final boardGrid = BoardGrid.random(4, 4);
     boardGrid.grid = gridMocks.bigBlock();
     boardGrid.resolve(BoardPoint(0,0));
 
@@ -82,7 +82,7 @@ void main() {
   });
 
   test("touching two rows get solved", () {
-    var boardGrid = BoardGrid.random(2, 4);
+    final boardGrid = BoardGrid.random(2, 4);
     boardGrid.grid = gridMocks.twoTouchingRows();
     boardGrid.resolve(BoardPoint(1,0));
 
@@ -90,7 +90,7 @@ void main() {
   });
 
   test("touching rows get solved", () {
-    var boardGrid = BoardGrid.random(3, 6);
+    final boardGrid = BoardGrid.random(3, 6);
     boardGrid.grid = gridMocks.threeTouchingRows();
     boardGrid.resolve(BoardPoint(2,0));
 
@@ -98,7 +98,7 @@ void main() {
   });
 
   test("touching columns get solved", () {
-    var boardGrid = BoardGrid.random(6, 3);
+    final boardGrid = BoardGrid.random(6, 3);
     boardGrid.grid = gridMocks.threeTouchingColumns();
     boardGrid.resolve(BoardPoint(0,0));
 
@@ -106,7 +106,7 @@ void main() {
   });
 
   test("correctItemPlacements works for only two items (XO)", () {
-    var boardGrid = BoardGrid.random(2, 1);
+    final boardGrid = BoardGrid.random(2, 1);
     boardGrid.grid = gridMocks.twoBottomSolved();
     boardGrid.correctItemPlacements();
 
@@ -114,7 +114,7 @@ void main() {
   });
 
   test("correctItemPlacements works for three bottom solved (XXO)", () {
-    var boardGrid = BoardGrid.random(3, 1);
+    final boardGrid = BoardGrid.random(3, 1);
     boardGrid.grid = gridMocks.threeBottomSolved();
     boardGrid.correctItemPlacements();
 
@@ -122,7 +122,7 @@ void main() {
   });
 
   test("correctItemPlacements works for three bottom solved (XXO)", () {
-    var boardGrid = BoardGrid.random(3, 1);
+    final boardGrid = BoardGrid.random(3, 1);
     boardGrid.grid = gridMocks.threeBetweenSolved();
     boardGrid.correctItemPlacements();
 
@@ -130,7 +130,7 @@ void main() {
   });
 
   test("correctItemPlacements works for four with two solved between (XOXO)", () {
-    var boardGrid = BoardGrid.random(4, 1);
+    final boardGrid = BoardGrid.random(4, 1);
     boardGrid.grid = gridMocks.fourTwoBetweenSolved();
     boardGrid.correctItemPlacements();
 

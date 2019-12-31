@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:puzzle_game/battle/BoardDraggable.dart';
-import 'package:puzzle_game/battle/BoardItemWhileDragging.dart';
+import 'package:puzzle_game/battle/board_draggable.dart';
+import 'package:puzzle_game/battle/board_item_while_dragging.dart';
 import 'package:puzzle_game/battle/board_item.dart';
 import 'package:puzzle_game/bloc/grid/grid_bloc.dart';
 import 'package:puzzle_game/bloc/grid/grid_state.dart';
@@ -11,7 +11,7 @@ import 'package:puzzle_game/bloc/grid/grid_state.dart';
 /// The background of the field and a border around the field will be set
 /// The item of the gridState at x/y a will be displayed on the field.
 class BoardField extends StatelessWidget {
-  BoardField(
+  const BoardField(
       {Key key, @required this.index, @required this.x, @required this.y})
       : super(key: key);
 
@@ -21,8 +21,8 @@ class BoardField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var dark = x % 2 == 0 ? index % 2 == 0 : index % 2 == 1;
-    var backgroundColor = dark ? Colors.brown[500] : Colors.brown[700];
+    final dark = x % 2 == 0 ? index % 2 == 0 : index % 2 == 1;
+    final backgroundColor = dark ? Colors.brown[500] : Colors.brown[700];
 
     return Container(
       decoration: BoxDecoration(
@@ -36,8 +36,8 @@ class BoardField extends StatelessWidget {
                   index: index, state: state, y: y, x: x);
             }
             if (state is Ready) {
-              var feedbackHeight = constraints.biggest.height * 1.1;
-              var feedbackWidth = constraints.biggest.width * 1.1;
+              final feedbackHeight = constraints.biggest.height * 1.1;
+              final feedbackWidth = constraints.biggest.width * 1.1;
               return BoardDraggable(
                   x: x,
                   y: y,
@@ -46,7 +46,7 @@ class BoardField extends StatelessWidget {
                   feedbackHeight: feedbackHeight,
                   feedbackWidth: feedbackWidth);
             }
-            var item = state.grid.itemFor(x, y);
+            final item = state.grid.itemFor(x, y);
             return BoardItem(item: item);
           },
         );

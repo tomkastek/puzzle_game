@@ -21,17 +21,17 @@ class GridBloc extends Bloc<GridEvent, GridState> {
 
   @override
   void onEvent(GridEvent event) {
-    var eventDescription = event.toString();
-    print('Event: $eventDescription');
+//    final eventDescription = event.toString();
+//    print('Event: $eventDescription');
     super.onEvent(event);
   }
 
   @override
   void onTransition(Transition<GridEvent, GridState> transition) {
-    var currentStateDescription = transition.currentState.toString();
-    var nextStateDescription = transition.nextState.toString();
-    var eventDescription = transition.event.toString();
-    print('Event: $eventDescription changed state from $currentStateDescription to $nextStateDescription');
+//    final currentStateDescription = transition.currentState.toString();
+//    final nextStateDescription = transition.nextState.toString();
+//    final eventDescription = transition.event.toString();
+//    print('Event: $eventDescription changed state from $currentStateDescription to $nextStateDescription');
     super.onTransition(transition);
   }
 
@@ -75,7 +75,7 @@ class GridBloc extends Bloc<GridEvent, GridState> {
           draggedIndex: event.to, movingStarted: true);
     }
     if (_movementTimer == null || !_movementTimer.isActive) {
-      _movementTimer = Timer(Duration(seconds: 6), () {
+      _movementTimer = Timer(const Duration(seconds: 6), () {
         dispatch(GridDragEnd());
       });
     }
@@ -87,7 +87,7 @@ class GridBloc extends Bloc<GridEvent, GridState> {
       if ((currentState as Dragging).movingStarted) {
         currentState.grid.resolve(pointFromIndex(0));
         yield Resolving(currentState.grid, 0);
-        _resolvingTimer = Timer(Duration(milliseconds: hideResolvedMilliseconds), () {
+        _resolvingTimer = Timer(const Duration(milliseconds: hideResolvedMilliseconds), () {
           dispatch(ResolvedGrid(0));
         });
         return;
@@ -98,16 +98,16 @@ class GridBloc extends Bloc<GridEvent, GridState> {
   }
 
   Stream<GridState> _mapResolveToState(ResolvedGrid event) async* {
-    var indexToCheck = event.checkedIndex + 1;
+    final indexToCheck = event.checkedIndex + 1;
     if (indexToCheck >= width * height) {
       yield Resolving(currentState.grid, indexToCheck);
       dispatch(GridSolved());
       return;
     }
-    var solvable = currentState.grid.resolve(pointFromIndex(indexToCheck));
+    final solvable = currentState.grid.resolve(pointFromIndex(indexToCheck));
     yield Resolving(currentState.grid, indexToCheck);
     if (solvable) {
-      _resolvingTimer = Timer(Duration(milliseconds: hideResolvedMilliseconds), () {
+      _resolvingTimer = Timer(const Duration(milliseconds: hideResolvedMilliseconds), () {
         dispatch(ResolvedGrid(indexToCheck));
       });
     } else {
@@ -116,14 +116,14 @@ class GridBloc extends Bloc<GridEvent, GridState> {
   }
 
   Stream<GridState> _mapGridSolvedToState(GridSolved event) async* {
-    var correctionHappened = currentState.grid.correctItemPlacements();
+    final correctionHappened = currentState.grid.correctItemPlacements();
     if (correctionHappened) {
       var fakeIndex = 0; // delete if grid is compareable. Until then we need a new index
       if (currentState is Resolving) {
         fakeIndex = (currentState as Resolving).lastChecked + 1;
       }
       yield Resolving(currentState.grid, fakeIndex);
-      _resolvingTimer = Timer(Duration(milliseconds: hideResolvedMilliseconds), () {
+      _resolvingTimer = Timer(const Duration(milliseconds: hideResolvedMilliseconds), () {
         dispatch(RefillGrid());
       });
     } else {
@@ -133,10 +133,10 @@ class GridBloc extends Bloc<GridEvent, GridState> {
   }
 
   Stream<GridState> _mapRefillGridToState(RefillGrid event) async* {
-    var refilled = currentState.grid.refill();
+    final refilled = currentState.grid.refill();
     yield Resolving(currentState.grid, -1);
     if (refilled) {
-      _resolvingTimer = Timer(Duration(milliseconds: hideResolvedMilliseconds), () {
+      _resolvingTimer = Timer(const Duration(milliseconds: hideResolvedMilliseconds), () {
         dispatch(ResolvedGrid(0));
       });
     } else {
@@ -167,6 +167,6 @@ class GridBloc extends Bloc<GridEvent, GridState> {
   }
 
   int yPos(int fromIndex) {
-    return (fromIndex % numberOfColumns());
+    return fromIndex % numberOfColumns();
   }
 }

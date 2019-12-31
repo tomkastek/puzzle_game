@@ -31,13 +31,12 @@ class BoardTarget extends StatelessWidget {
           item: state.grid.itemFor(x, y),
         );
       },
-      onWillAccept: (int) {
-        print(index);
+      onWillAccept: (_) {
         gridBloc.dispatch(GridDragHovered(index));
         return true;
       },
       onAccept: (int data) {
-        print('onAccept');
+//        print('onAccept');
         gridBloc.dispatch(GridDragEnd());
       },
     );

@@ -7,7 +7,7 @@ class CircleItem extends Equatable {
   final CircleVariant variant;
 
   CircleItem(this.variant, {List props = const []})
-      : super([variant]..addAll(props));
+      : super([variant,...props]);
 
   Icon getIcon(double size, {int alpha = 255}) {
     switch (variant) {

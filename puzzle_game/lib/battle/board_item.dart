@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:puzzle_game/model/battle/CircleItem.dart';
+import 'package:puzzle_game/model/battle/circle_item.dart';
 
 class BoardItem extends StatelessWidget {
-  BoardItem({Key key, @required this.item, this.alpha = 255}) : super(key: key);
+  const BoardItem({Key key, @required this.item, this.alpha = 255}) : super(key: key);
 
   final CircleItem item;
   final int alpha;
