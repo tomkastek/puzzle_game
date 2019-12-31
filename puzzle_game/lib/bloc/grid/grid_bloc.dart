@@ -20,6 +20,22 @@ class GridBloc extends Bloc<GridEvent, GridState> {
   GridState get initialState => Ready(BoardGrid.random(height, width));
 
   @override
+  void onEvent(GridEvent event) {
+    var eventDescription = event.toString();
+    print('Event: $eventDescription');
+    super.onEvent(event);
+  }
+
+  @override
+  void onTransition(Transition<GridEvent, GridState> transition) {
+    var currentStateDescription = transition.currentState.toString();
+    var nextStateDescription = transition.nextState.toString();
+    var eventDescription = transition.event.toString();
+    print('Event: $eventDescription changed state from $currentStateDescription to $nextStateDescription');
+    super.onTransition(transition);
+  }
+
+  @override
   Stream<GridState> mapEventToState(GridEvent event) async* {
     if (event is GridDragBegan) {
       yield* _mapDragBeganToState(event);
@@ -111,8 +127,7 @@ class GridBloc extends Bloc<GridEvent, GridState> {
         dispatch(RefillGrid());
       });
     } else {
-      // TODO: Why isn't this the last state after grid solving?
-      Ready(currentState.grid);
+      yield Ready(currentState.grid);
     }
 
   }

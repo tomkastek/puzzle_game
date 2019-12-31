@@ -11,6 +11,9 @@ abstract class GridState extends Equatable {
 
 class Ready extends GridState {
   Ready(BoardGrid grid) : super(grid);
+
+  @override
+  String toString() => 'Ready';
 }
 
 class Dragging extends GridState {
@@ -20,6 +23,9 @@ class Dragging extends GridState {
   Dragging(BoardGrid grid,
       {@required this.draggedIndex, @required this.movingStarted})
       : super(grid, props: [draggedIndex, movingStarted]);
+
+  @override
+  String toString() => 'Dragging { draggedIndex: $draggedIndex, movingStarted: $movingStarted }';
 }
 
 class Resolving extends GridState {
@@ -28,8 +34,14 @@ class Resolving extends GridState {
   Resolving(BoardGrid grid, this.lastChecked)
       : assert(lastChecked != null),
         super(grid, props: [grid, lastChecked]);
+
+  @override
+  String toString() => 'Resolving { lastChecked: $lastChecked }';
 }
 
 class WaitForFill extends GridState {
   WaitForFill(BoardGrid grid) : super(grid);
+
+  @override
+  String toString() => 'WaitForFill';
 }

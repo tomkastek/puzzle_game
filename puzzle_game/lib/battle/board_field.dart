@@ -31,7 +31,6 @@ class BoardField extends StatelessWidget {
       child: LayoutBuilder(builder: (context, constraints) {
         return BlocBuilder<GridBloc, GridState>(
           builder: (context, state) {
-            print(state.runtimeType);
             if (state is Dragging) {
               return BoardItemWhileDragging(
                   index: index, state: state, y: y, x: x);
