@@ -2,8 +2,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-class BoardPoint extends Point {
-  BoardPoint(int x, int y) : super(x, y);
+// TODO: replace .toInt everywhere
+class BoardPoint {
+  final int x;
+  final int y;
+
+  BoardPoint(this.x, this.y);
 
   BoardPoint nextPointFor(AxisDirection direction) {
     var row = x;
